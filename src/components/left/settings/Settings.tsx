@@ -1,4 +1,6 @@
-import React, { memo, useCallback, useState } from '../../../lib/teact/teact';
+import React, {
+  memo, useCallback, useEffect, useState,
+} from '../../../lib/teact/teact';
 import { getActions, getGlobal } from '../../../global';
 
 import type { FC } from '../../../lib/teact/teact';
@@ -144,6 +146,12 @@ const Settings: FC<OwnProps> = ({
   const { closeShareChatFolderModal } = getActions();
   const [twoFaState, twoFaDispatch] = useTwoFaReducer();
   const [privacyPasscode, setPrivacyPasscode] = useState<string>('');
+
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log('tl_navigation_settingsScreen');
+    (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_settingsScreen');
+  }, []);
 
   const handleReset = useCallback((forceReturnToChatList?: true | Event) => {
     const isFromSettings = selectTabState(getGlobal()).shareFolderScreen?.isFromSettings;

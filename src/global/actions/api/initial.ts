@@ -167,6 +167,8 @@ addActionHandler('signOut', async (global, actions, payload): Promise<void> => {
 
   actions.reset();
 
+  (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_authentication_loggedOut');
+
   if (payload?.forceInitApi) {
     actions.initApi();
   }

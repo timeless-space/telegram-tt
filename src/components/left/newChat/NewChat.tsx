@@ -1,5 +1,7 @@
 import type { FC } from '../../../lib/teact/teact';
-import React, { memo, useCallback, useState } from '../../../lib/teact/teact';
+import React, {
+  memo, useCallback, useState, useEffect,
+} from '../../../lib/teact/teact';
 
 import { LeftColumnContent } from '../../../types';
 
@@ -33,6 +35,25 @@ const NewChat: FC<OwnProps> = ({
   const handleNextStep = useCallback(() => {
     onContentChange(isChannel ? LeftColumnContent.NewChannelStep2 : LeftColumnContent.NewGroupStep2);
   }, [isChannel, onContentChange]);
+
+  // eslint-disable-next-line consistent-return
+  useEffect(() => {
+    switch (content) {
+      case LeftColumnContent.NewChannelStep1:
+      case LeftColumnContent.NewGroupStep1:
+        // eslint-disable-next-line no-console
+        console.log('tl_navigation_newChatScreenStep1');
+        (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_newChatScreenStep1');
+        break;
+      case LeftColumnContent.NewChannelStep2:
+      case LeftColumnContent.NewGroupStep2:
+        // eslint-disable-next-line no-console
+        console.log('tl_navigation_newChatScreenStep2');
+        break;
+      default:
+        break;
+    }
+  }, []);
 
   return (
     <Transition

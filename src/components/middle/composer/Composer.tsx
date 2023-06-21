@@ -331,6 +331,12 @@ const Composer: FC<OwnProps & StateProps> = ({
   const [isSymbolMenuForced, forceShowSymbolMenu, cancelForceShowSymbolMenu] = useFlag();
   const sendMessageAction = useSendMessageAction(chatId, threadId);
 
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log('tl_navigation_chatScreen');
+    (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_chatScreen');
+  }, []);
+
   useEffect(processMessageInputForCustomEmoji, [getHtml]);
 
   const customEmojiNotificationNumber = useRef(0);

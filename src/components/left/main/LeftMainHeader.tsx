@@ -183,54 +183,20 @@ const LeftMainHeader: FC<OwnProps & StateProps> = ({
   }, [isConnectionStatusMinimized, setSettingOption]);
 
   const handleSelectSaved = useCallback(() => {
+    // eslint-disable-next-line no-console
+    console.log('tl_navigation_savedMessagesScreen');
+    (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_savedMessagesScreen');
     openChat({ id: currentUserId, shouldReplaceHistory: true });
   }, [currentUserId, openChat]);
-
-  // const handleDarkModeToggle = useCallback((e: React.SyntheticEvent<HTMLElement>) => {
-  //   // No action in here/ default dark mode
-  //   e.stopPropagation();
-  //   const newTheme = theme === 'light' ? 'dark' : 'light';
-  //   setSettingOption({ theme: newTheme });
-  //   setSettingOption({ shouldUseSystemTheme: false });
-  // }, [setSettingOption, theme]);
 
   useEffect(() => {
     setSettingOption({ theme: 'dark' });
     setSettingOption({ shouldUseSystemTheme: false });
   }, []);
 
-  // const handleAnimationLevelChange = useCallback((e: React.SyntheticEvent<HTMLElement>) => {
-  //   e.stopPropagation();
-
-  //   let newLevel = animationLevel + 1;
-  //   if (newLevel > ANIMATION_LEVEL_MAX) {
-  //     newLevel = ANIMATION_LEVEL_MIN;
-  //   }
-  //   const performanceSettings = newLevel === ANIMATION_LEVEL_MIN
-  //     ? INITIAL_PERFORMANCE_STATE_MIN
-  //     : (newLevel === ANIMATION_LEVEL_MAX ? INITIAL_PERFORMANCE_STATE_MAX : INITIAL_PERFORMANCE_STATE_MID);
-
-  //   setSettingOption({ animationLevel: newLevel as AnimationLevel });
-  //   updatePerformanceSettings(performanceSettings);
-  // }, [animationLevel, setSettingOption]);
-
-  // const handleChangelogClick = useCallback(() => {
-  //   window.open(BETA_CHANGELOG_URL, '_blank', 'noopener');
-  // }, []);
-
-  // const handleSwitchToWebK = useCallback(() => {
-  //   setPermanentWebVersion('K');
-  //   clearWebsync();
-  //   skipLockOnUnload();
-  // }, [skipLockOnUnload]);
-
   const handleOpenTipsChat = useCallback(() => {
     openChatByUsername({ username: lang('Settings.TipsUsername') });
   }, [lang, openChatByUsername]);
-
-  // const handleBugReportClick = useCallback(() => {
-  //   openUrl({ url: FEEDBACK_URL });
-  // }, [openUrl]);
 
   const handleLockScreen = useCallback(() => {
     lockScreen();
@@ -249,9 +215,6 @@ const LeftMainHeader: FC<OwnProps & StateProps> = ({
     : lang('Search');
 
   const versionString = IS_BETA ? `${APP_VERSION} Beta (${APP_REVISION})` : (DEBUG ? APP_REVISION : APP_VERSION);
-  // const animationLevelValue = animationLevel !== ANIMATION_LEVEL_MIN
-  //   ? (animationLevel === ANIMATION_LEVEL_MAX ? 'max' : 'mid')
-  //   : 'min';
 
   const isFullscreen = useFullscreenStatus();
 
@@ -296,63 +259,12 @@ const LeftMainHeader: FC<OwnProps & StateProps> = ({
       >
         {lang('Settings')}
       </MenuItem>
-      {/* <MenuItem
-        icon="darkmode"
-        onClick={handleDarkModeToggle}
-      >
-        <span className="menu-item-name">{lang('lng_menu_night_mode')}</span>
-        <Switcher
-          id="darkmode"
-          label={lang(theme === 'dark' ? 'lng_settings_disable_night_theme' : 'lng_settings_enable_night_theme')}
-          checked={theme === 'dark'}
-          noAnimation
-        />
-      </MenuItem> */}
-      {/* <MenuItem
-        icon="animations"
-        onClick={handleAnimationLevelChange}
-      >
-        <span className="menu-item-name capitalize">{lang('Appearance.Animations').toLowerCase()}</span>
-        <Toggle value={animationLevelValue} />
-      </MenuItem> */}
       <MenuItem
         icon="help"
         onClick={handleOpenTipsChat}
       >
         {lang('TelegramFeatures')}
       </MenuItem>
-      {/* <MenuItem
-        icon="bug"
-        onClick={handleBugReportClick}
-      >
-        Report Bug
-      </MenuItem> */}
-      {/* {IS_BETA && (
-        <MenuItem
-          icon="permissions"
-          onClick={handleChangelogClick}
-        >
-          Beta Changelog
-        </MenuItem>
-      )} */}
-      {/* {withOtherVersions && (
-        <MenuItem
-          icon="K"
-          isCharIcon
-          href={WEBK_VERSION_URL}
-          onClick={handleSwitchToWebK}
-        >
-          Switch to K Version
-        </MenuItem>
-      )} */}
-      {/* {canInstall && (
-        <MenuItem
-          icon="install"
-          onClick={getPromptInstall()}
-        >
-          Install App
-        </MenuItem>
-      )} */}
     </>
   ), [
     archivedUnreadChatsCount, lang, handleOpenTipsChat, handleSelectSaved,

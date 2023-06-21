@@ -113,14 +113,23 @@ const App: FC<StateProps> = ({
       case 'authorizationStateWaitPhoneNumber':
         page = 'authPhoneNumber';
         activeKey = AppScreens.auth;
+        // eslint-disable-next-line no-console
+        console.log('tl_navigation_authPhoneNumberScreen');
+        (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_authPhoneNumberScreen');
         break;
       case 'authorizationStateWaitCode':
         page = 'authCode';
         activeKey = AppScreens.auth;
+        // eslint-disable-next-line no-console
+        console.log('tl_navigation_authCodeScreen');
+        (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_authCodeScreen');
         break;
       case 'authorizationStateWaitPassword':
         page = 'authPassword';
         activeKey = AppScreens.auth;
+        // eslint-disable-next-line no-console
+        console.log('tl_navigation_authPasswordScreen');
+        (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_authPasswordScreen');
         break;
       case 'authorizationStateWaitRegistration':
         activeKey = AppScreens.auth;
@@ -128,6 +137,9 @@ const App: FC<StateProps> = ({
       case 'authorizationStateWaitQrCode':
         page = 'authQrCode';
         activeKey = AppScreens.auth;
+        // eslint-disable-next-line no-console
+        console.log('tl_navigation_authQrCodeScreen');
+        (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_authQrCodeScreen');
         break;
       case 'authorizationStateClosed':
       case 'authorizationStateClosing':
@@ -135,16 +147,28 @@ const App: FC<StateProps> = ({
       case 'authorizationStateReady':
         page = 'main';
         activeKey = AppScreens.main;
+        // eslint-disable-next-line no-console
+        console.log('tl_navigation_mainScreen');
+        (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_mainScreen');
         break;
     }
   } else if (hasStoredSession(true)) {
     page = 'main';
     activeKey = AppScreens.main;
+    // eslint-disable-next-line no-console
+    console.log('tl_navigation_mainScreen');
+    (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_mainScreen');
   } else if (hasPasscode) {
     activeKey = AppScreens.lock;
+    // eslint-disable-next-line no-console
+    console.log('tl_navigation_lockScreen');
+    (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_lockScreen');
   } else {
     page = isMobileOs ? 'authPhoneNumber' : 'authQrCode';
     activeKey = AppScreens.auth;
+    // eslint-disable-next-line no-console
+    console.log(`tl_navigation_${page}Screen`);
+    (window as any).webkit.messageHandlers.jsHandler.postMessage(`tl_navigation_${page}Screen`);
   }
 
   if (activeKey !== AppScreens.lock
@@ -154,6 +178,9 @@ const App: FC<StateProps> = ({
     && !hasWebAuthTokenFailed) {
     page = 'main';
     activeKey = AppScreens.main;
+    // eslint-disable-next-line no-console
+    console.log('tl_navigation_mainScreen');
+    (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_mainScreen');
   }
 
   useEffect(() => {

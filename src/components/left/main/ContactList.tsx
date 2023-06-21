@@ -1,5 +1,7 @@
 import type { FC } from '../../../lib/teact/teact';
-import React, { useCallback, useMemo, memo } from '../../../lib/teact/teact';
+import React, {
+  useCallback, useMemo, memo, useEffect,
+} from '../../../lib/teact/teact';
 import { getActions, withGlobal } from '../../../global';
 
 import type { ApiUser, ApiUserStatus } from '../../../api/types';
@@ -48,6 +50,12 @@ const ContactList: FC<OwnProps & StateProps> = ({
     isActive,
     onBack: onReset,
   });
+
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log('tl_navigation_contactScreen');
+    (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_contactScreen');
+  }, []);
 
   const handleClick = useCallback((id: string) => {
     openChat({ id, shouldReplaceHistory: true });

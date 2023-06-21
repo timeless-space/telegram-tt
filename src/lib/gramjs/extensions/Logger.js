@@ -104,10 +104,10 @@ class Logger {
         if (this.canSend(level)) {
             if (!this.isBrowser) {
                 // eslint-disable-next-line no-console
-                console.log(color + this.format(message, level) + this.colors.end);
+                // console.log(color + this.format(message, level) + this.colors.end);
             } else {
                 // eslint-disable-next-line no-console
-                console.log(this.colors.start + this.format(message, level), color);
+                // console.log(this.colors.start + this.format(message, level), color);
             }
         }
     }

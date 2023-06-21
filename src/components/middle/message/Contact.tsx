@@ -1,5 +1,5 @@
 import type { FC } from '../../../lib/teact/teact';
-import React, { useCallback } from '../../../lib/teact/teact';
+import React, { useCallback, useEffect } from '../../../lib/teact/teact';
 import { getActions, withGlobal } from '../../../global';
 
 import type { ApiUser, ApiContact, ApiCountryCode } from '../../../api/types';
@@ -35,6 +35,12 @@ const Contact: FC<OwnProps & StateProps> = ({
     userId,
   } = contact;
   const isRegistered = userId !== UNREGISTERED_CONTACT_ID;
+
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log('tl_navigation_contactScreen');
+    (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_contactScreen');
+  }, []);
 
   const handleClick = useCallback(() => {
     openChat({ id: userId });
