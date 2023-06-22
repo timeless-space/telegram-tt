@@ -1,5 +1,5 @@
 import React, {
-  memo, useCallback, useEffect, useState,
+  memo, useCallback, useState,
 } from '../../../lib/teact/teact';
 import { getActions, getGlobal } from '../../../global';
 

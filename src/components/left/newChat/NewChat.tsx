@@ -1,6 +1,6 @@
 import type { FC } from '../../../lib/teact/teact';
 import React, {
-  memo, useCallback, useState, useEffect,
+  memo, useCallback, useState,
 } from '../../../lib/teact/teact';
 
 import { LeftColumnContent } from '../../../types';

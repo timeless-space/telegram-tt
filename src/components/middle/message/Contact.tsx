@@ -1,5 +1,5 @@
 import type { FC } from '../../../lib/teact/teact';
-import React, { useCallback, useEffect } from '../../../lib/teact/teact';
+import React, { useCallback } from '../../../lib/teact/teact';
 import { getActions, withGlobal } from '../../../global';
 
 import type { ApiUser, ApiContact, ApiCountryCode } from '../../../api/types';
