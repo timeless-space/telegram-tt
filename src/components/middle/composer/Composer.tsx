@@ -332,8 +332,6 @@ const Composer: FC<OwnProps & StateProps> = ({
   const sendMessageAction = useSendMessageAction(chatId, threadId);
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('tl_navigation_chatScreen');
     (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_chatScreen');
   }, []);
 

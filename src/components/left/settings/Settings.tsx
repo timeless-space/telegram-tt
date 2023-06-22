@@ -148,8 +148,6 @@ const Settings: FC<OwnProps> = ({
   const [privacyPasscode, setPrivacyPasscode] = useState<string>('');
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('tl_navigation_settingsScreen');
     (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_settingsScreen');
   }, []);
 

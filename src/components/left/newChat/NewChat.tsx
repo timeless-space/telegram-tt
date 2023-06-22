@@ -41,14 +41,11 @@ const NewChat: FC<OwnProps> = ({
     switch (content) {
       case LeftColumnContent.NewChannelStep1:
       case LeftColumnContent.NewGroupStep1:
-        // eslint-disable-next-line no-console
-        console.log('tl_navigation_newChatScreenStep1');
         (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_newChatScreenStep1');
         break;
       case LeftColumnContent.NewChannelStep2:
       case LeftColumnContent.NewGroupStep2:
-        // eslint-disable-next-line no-console
-        console.log('tl_navigation_newChatScreenStep2');
+        (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_newChatScreenStep2');
         break;
       default:
         break;

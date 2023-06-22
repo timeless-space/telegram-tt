@@ -71,38 +71,24 @@ const LeftSearch: FC<OwnProps & StateProps> = ({
   useEffect(() => {
     switch (activeTab) {
       case 0:
-        // eslint-disable-next-line no-console
-        console.log('tl_navigation_chatsTab');
         (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_chatsTab');
         break;
       case 1:
-        // eslint-disable-next-line no-console
-        console.log('tl_navigation_mediaTab');
         (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_mediaTab');
         break;
       case 2:
-        // eslint-disable-next-line no-console
-        console.log('tl_navigation_linksTab');
         (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_linksTab');
         break;
       case 3:
-        // eslint-disable-next-line no-console
-        console.log('tl_navigation_filesTab');
         (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_filesTab');
         break;
       case 4:
-        // eslint-disable-next-line no-console
-        console.log('tl_navigation_musicTab');
         (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_musicTab');
         break;
       case 5:
-        // eslint-disable-next-line no-console
-        console.log('tl_navigation_voiceTab');
         (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_voiceTab');
         break;
       default:
-        // eslint-disable-next-line no-console
-        console.log('tl_navigation_noTab');
         (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_noTab');
         break;
     }

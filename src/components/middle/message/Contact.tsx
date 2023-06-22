@@ -37,8 +37,6 @@ const Contact: FC<OwnProps & StateProps> = ({
   const isRegistered = userId !== UNREGISTERED_CONTACT_ID;
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('tl_navigation_contactScreen');
     (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_contactScreen');
   }, []);
 

@@ -54,8 +54,6 @@ const ContactList: FC<OwnProps & StateProps> = ({
   });
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('tl_navigation_contactScreen');
     (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_contactScreen');
   }, []);
 
