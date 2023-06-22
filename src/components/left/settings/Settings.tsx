@@ -147,10 +147,6 @@ const Settings: FC<OwnProps> = ({
   const [twoFaState, twoFaDispatch] = useTwoFaReducer();
   const [privacyPasscode, setPrivacyPasscode] = useState<string>('');
 
-  useEffect(() => {
-    (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_settingsScreen');
-  }, []);
-
   const handleReset = useCallback((forceReturnToChatList?: true | Event) => {
     const isFromSettings = selectTabState(getGlobal()).shareFolderScreen?.isFromSettings;
 

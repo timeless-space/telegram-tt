@@ -53,10 +53,6 @@ const ContactList: FC<OwnProps & StateProps> = ({
     onBack: onReset,
   });
 
-  useEffect(() => {
-    (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_contactScreen');
-  }, []);
-
   const handleClick = useCallback((id: string) => {
     openChat({ id, shouldReplaceHistory: true });
   }, [openChat]);

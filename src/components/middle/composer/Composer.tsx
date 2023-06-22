@@ -331,10 +331,6 @@ const Composer: FC<OwnProps & StateProps> = ({
   const [isSymbolMenuForced, forceShowSymbolMenu, cancelForceShowSymbolMenu] = useFlag();
   const sendMessageAction = useSendMessageAction(chatId, threadId);
 
-  useEffect(() => {
-    (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_chatScreen');
-  }, []);
-
   useEffect(processMessageInputForCustomEmoji, [getHtml]);
 
   const customEmojiNotificationNumber = useRef(0);

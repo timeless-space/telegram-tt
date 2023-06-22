@@ -36,10 +36,6 @@ const Contact: FC<OwnProps & StateProps> = ({
   } = contact;
   const isRegistered = userId !== UNREGISTERED_CONTACT_ID;
 
-  useEffect(() => {
-    (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_contactScreen');
-  }, []);
-
   const handleClick = useCallback(() => {
     openChat({ id: userId });
   }, [openChat, userId]);

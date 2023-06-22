@@ -183,7 +183,6 @@ const LeftMainHeader: FC<OwnProps & StateProps> = ({
   }, [isConnectionStatusMinimized, setSettingOption]);
 
   const handleSelectSaved = useCallback(() => {
-    (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_savedMessagesScreen');
     openChat({ id: currentUserId, shouldReplaceHistory: true });
   }, [currentUserId, openChat]);
 

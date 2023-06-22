@@ -36,22 +36,6 @@ const NewChat: FC<OwnProps> = ({
     onContentChange(isChannel ? LeftColumnContent.NewChannelStep2 : LeftColumnContent.NewGroupStep2);
   }, [isChannel, onContentChange]);
 
-  // eslint-disable-next-line consistent-return
-  useEffect(() => {
-    switch (content) {
-      case LeftColumnContent.NewChannelStep1:
-      case LeftColumnContent.NewGroupStep1:
-        (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_newChatScreenStep1');
-        break;
-      case LeftColumnContent.NewChannelStep2:
-      case LeftColumnContent.NewGroupStep2:
-        (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_newChatScreenStep2');
-        break;
-      default:
-        break;
-    }
-  }, []);
-
   return (
     <Transition
       id="NewChat"
