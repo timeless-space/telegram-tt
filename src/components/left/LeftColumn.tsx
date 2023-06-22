@@ -120,6 +120,9 @@ function LeftColumn({
         (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigationNewChannelStep2Screen');
         break;
       case 7:
+        (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigationNewGroupStep1Screen');
+        break;
+      case 8:
         (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigationNewGroupStep2Screen');
         break;
       default:

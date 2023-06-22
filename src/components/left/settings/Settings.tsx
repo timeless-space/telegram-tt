@@ -1,6 +1,4 @@
-import React, {
-  memo, useCallback, useState,
-} from '../../../lib/teact/teact';
+import React, { memo, useCallback, useState } from '../../../lib/teact/teact';
 import { getActions, getGlobal } from '../../../global';
 
 import type { FC } from '../../../lib/teact/teact';
