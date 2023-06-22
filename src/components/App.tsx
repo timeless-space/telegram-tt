@@ -113,17 +113,14 @@ const App: FC<StateProps> = ({
       case 'authorizationStateWaitPhoneNumber':
         page = 'authPhoneNumber';
         activeKey = AppScreens.auth;
-        (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_authPhoneNumberScreen');
         break;
       case 'authorizationStateWaitCode':
         page = 'authCode';
         activeKey = AppScreens.auth;
-        (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_authCodeScreen');
         break;
       case 'authorizationStateWaitPassword':
         page = 'authPassword';
         activeKey = AppScreens.auth;
-        (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_authPasswordScreen');
         break;
       case 'authorizationStateWaitRegistration':
         activeKey = AppScreens.auth;
@@ -131,7 +128,6 @@ const App: FC<StateProps> = ({
       case 'authorizationStateWaitQrCode':
         page = 'authQrCode';
         activeKey = AppScreens.auth;
-        (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_authQrCodeScreen');
         break;
       case 'authorizationStateClosed':
       case 'authorizationStateClosing':
@@ -139,20 +135,16 @@ const App: FC<StateProps> = ({
       case 'authorizationStateReady':
         page = 'main';
         activeKey = AppScreens.main;
-        (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_mainScreen');
         break;
     }
   } else if (hasStoredSession(true)) {
     page = 'main';
     activeKey = AppScreens.main;
-    (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_mainScreen');
   } else if (hasPasscode) {
     activeKey = AppScreens.lock;
-    (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_lockScreen');
   } else {
     page = isMobileOs ? 'authPhoneNumber' : 'authQrCode';
     activeKey = AppScreens.auth;
-    (window as any).webkit.messageHandlers.jsHandler.postMessage(`tl_navigation_${page}Screen`);
   }
 
   if (activeKey !== AppScreens.lock
@@ -162,7 +154,6 @@ const App: FC<StateProps> = ({
     && !hasWebAuthTokenFailed) {
     page = 'main';
     activeKey = AppScreens.main;
-    (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_mainScreen');
   }
 
   useEffect(() => {

@@ -274,6 +274,14 @@ const Main: FC<OwnProps & StateProps> = ({
     }
   }, [isDesktop, isLeftColumnOpen, isMiddleColumnOpen, isMobile, toggleLeftColumn]);
 
+  useEffect(() => {
+    if (isLeftColumnOpen) {
+      (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_mainScreen');
+    } else {
+      (window as any).webkit?.messageHandlers.jsHandler.postMessage('tl_navigation_chatScreen');
+    }
+  }, [isLeftColumnOpen]);
+
   useInterval(checkAppVersion, (isMasterTab && !IS_ELECTRON) ? APP_OUTDATED_TIMEOUT_MS : undefined, true);
 
   useEffect(() => {
