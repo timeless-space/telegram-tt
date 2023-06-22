@@ -298,12 +298,63 @@ const LeftMainHeader: FC<OwnProps & StateProps> = ({
       >
         {lang('Settings')}
       </MenuItem>
+      {/* <MenuItem
+        icon="darkmode"
+        onClick={handleDarkModeToggle}
+      >
+        <span className="menu-item-name">{lang('lng_menu_night_mode')}</span>
+        <Switcher
+          id="darkmode"
+          label={lang(theme === 'dark' ? 'lng_settings_disable_night_theme' : 'lng_settings_enable_night_theme')}
+          checked={theme === 'dark'}
+          noAnimation
+        />
+      </MenuItem> */}
+      {/* <MenuItem
+        icon="animations"
+        onClick={handleAnimationLevelChange}
+      >
+        <span className="menu-item-name capitalize">{lang('Appearance.Animations').toLowerCase()}</span>
+        <Toggle value={animationLevelValue} />
+      </MenuItem> */}
       <MenuItem
         icon="help"
         onClick={handleOpenTipsChat}
       >
         {lang('TelegramFeatures')}
       </MenuItem>
+      {/* <MenuItem
+        icon="bug"
+        onClick={handleBugReportClick}
+      >
+        Report Bug
+      </MenuItem> */}
+      {/* {IS_BETA && (
+        <MenuItem
+          icon="permissions"
+          onClick={handleChangelogClick}
+        >
+          Beta Changelog
+        </MenuItem>
+      )} */}
+      {/* {withOtherVersions && (
+        <MenuItem
+          icon="K"
+          isCharIcon
+          href={WEBK_VERSION_URL}
+          onClick={handleSwitchToWebK}
+        >
+          Switch to K Version
+        </MenuItem>
+      )} */}
+      {/* {canInstall && (
+        <MenuItem
+          icon="install"
+          onClick={getPromptInstall()}
+        >
+          Install App
+        </MenuItem>
+      )} */}
     </>
   ), [
     archivedUnreadChatsCount, lang, handleOpenTipsChat, handleSelectSaved,
