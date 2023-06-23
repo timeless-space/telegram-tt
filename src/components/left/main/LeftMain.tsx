@@ -159,7 +159,7 @@ const LeftMain: FC<OwnProps> = ({
       onMouseEnter={!IS_TOUCH_ENV ? handleMouseEnter : undefined}
       onMouseLeave={!IS_TOUCH_ENV ? handleMouseLeave : undefined}
     >
-      <div className={`${content === LeftColumnContent.ChatList ? 'fix-issue' : ''}`}>
+      <div id="fix-issue-mobile" className={`${content === LeftColumnContent.ChatList ? 'fix-issue' : ''}`}>
         <LeftMainHeader
           shouldHideSearch={isForumPanelVisible}
           content={content}

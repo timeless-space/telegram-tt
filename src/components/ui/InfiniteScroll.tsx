@@ -14,6 +14,7 @@ import buildStyle from '../../util/buildStyle';
 
 type OwnProps = {
   ref?: RefObject<HTMLDivElement>;
+  id?: string;
   className?: string;
   items?: any[];
   itemSelector?: string;
@@ -40,6 +41,7 @@ const DEFAULT_SENSITIVE_AREA = 800;
 
 const InfiniteScroll: FC<OwnProps> = ({
   ref,
+  id,
   className,
   items,
   itemSelector = DEFAULT_LIST_SELECTOR,
@@ -231,6 +233,7 @@ const InfiniteScroll: FC<OwnProps> = ({
   return (
     <div
       ref={containerRef}
+      id={id}
       className={className}
       onScroll={handleScroll}
       teactFastList={!noFastList && !withAbsolutePositioning}
