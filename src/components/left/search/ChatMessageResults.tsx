@@ -116,7 +116,7 @@ const ChatMessageResults: FC<OwnProps & StateProps> = ({
   return (
     <div className="LeftSearch">
       <InfiniteScroll
-        className="search-content custom-scroll chat-list"
+        className="search-content no-scrollbar chat-list"
         items={foundMessages}
         onLoadMore={handleLoadMore}
         noFastList

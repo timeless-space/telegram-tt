@@ -53,7 +53,7 @@ const AuthRegister: FC<StateProps> = ({
   }
 
   return (
-    <div id="auth-registration-form" className="custom-scroll">
+    <div id="auth-registration-form" className="no-scrollbar">
       <div className="auth-form">
         <form action="" method="post" onSubmit={handleSubmit}>
           <AvatarEditable onChange={setCroppedFile} />

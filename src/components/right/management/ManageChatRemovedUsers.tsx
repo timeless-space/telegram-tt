@@ -81,7 +81,7 @@ const ManageChatRemovedUsers: FC<OwnProps & StateProps> = ({
 
   return (
     <div className="Management">
-      <div className="custom-scroll">
+      <div className="no-scrollbar">
         <div className="section" dir={lang.isRtl ? 'rtl' : undefined}>
           <p className="text-muted">{lang(isChannel ? 'NoBlockedChannel2' : 'NoBlockedGroup2')}</p>
 

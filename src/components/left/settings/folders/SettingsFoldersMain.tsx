@@ -190,7 +190,7 @@ const SettingsFoldersMain: FC<OwnProps & StateProps> = ({
   }, [foldersById, isPremium, maxFolders]);
 
   return (
-    <div className="settings-content no-border custom-scroll">
+    <div className="settings-content no-border no-scrollbar">
       <div className="settings-content-header">
         <AnimatedIcon
           size={STICKER_SIZE_FOLDER_SETTINGS}

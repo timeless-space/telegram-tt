@@ -559,7 +559,7 @@ const PaymentModal: FC<OwnProps & StateProps & GlobalStateProps> = ({
       </div>
       {step !== undefined ? (
         <Transition name="slide" activeKey={step}>
-          <div className="content custom-scroll">
+          <div className="content no-scrollbar">
             {renderModalContent(step)}
           </div>
         </Transition>

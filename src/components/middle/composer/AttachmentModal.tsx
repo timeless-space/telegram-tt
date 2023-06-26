@@ -526,7 +526,7 @@ const AttachmentModal: FC<OwnProps & StateProps> = ({
         <div
           className={buildClassName(
             styles.attachments,
-            'custom-scroll',
+            'no-scrollbar',
             isBottomDividerShown && styles.attachmentsBottomPadding,
           )}
           onScroll={handleAttachmentsScroll}

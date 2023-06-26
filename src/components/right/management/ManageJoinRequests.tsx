@@ -65,7 +65,7 @@ const ManageJoinRequests: FC<OwnProps & StateProps> = ({
 
   return (
     <div className="Management ManageJoinRequests">
-      <div className="custom-scroll">
+      <div className="no-scrollbar">
         <div className="section">
           <AnimatedIcon
             tgsUrl={LOCAL_TGS_URLS.JoinRequest}

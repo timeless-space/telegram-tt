@@ -119,7 +119,7 @@ const ManageReactions: FC<OwnProps & StateProps> = ({
 
   return (
     <div className="Management">
-      <div className="custom-scroll">
+      <div className="no-scrollbar">
         <div className="section">
           <h3 className="section-heading">
             {lang('AvailableReactions')}

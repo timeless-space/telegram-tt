@@ -147,7 +147,7 @@ const Statistics: FC<OwnProps & StateProps> = ({
   }
 
   return (
-    <div className={buildClassName('Statistics custom-scroll', isReady && 'ready')}>
+    <div className={buildClassName('Statistics no-scrollbar', isReady && 'ready')}>
       <StatisticsOverview statistics={statistics} isMessage />
 
       {!loadedCharts.current.length && <Loading />}

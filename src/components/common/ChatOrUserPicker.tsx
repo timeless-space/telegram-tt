@@ -170,7 +170,7 @@ const ChatOrUserPicker: FC<OwnProps> = ({
         </div>
         <InfiniteScroll
           ref={topicContainerRef}
-          className="picker-list custom-scroll"
+          className="picker-list no-scrollbar"
           items={topicIds}
           withAbsolutePositioning
           maxHeight={!topicIds ? 0 : topicIds.length * CHAT_HEIGHT_PX}
@@ -224,7 +224,7 @@ const ChatOrUserPicker: FC<OwnProps> = ({
         {viewportIds?.length ? (
           <InfiniteScroll
             ref={containerRef}
-            className="picker-list custom-scroll"
+            className="picker-list no-scrollbar"
             items={viewportIds}
             onLoadMore={getMore}
             withAbsolutePositioning

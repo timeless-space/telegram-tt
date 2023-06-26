@@ -104,7 +104,7 @@ const MessageLanguageModal: FC<OwnProps & StateProps> = ({
         placeholder={lang('Search')}
         teactExperimentControlled
       />
-      <div className={buildClassName(styles.languages, 'custom-scroll')}>
+      <div className={buildClassName(styles.languages, 'no-scrollbar')}>
         {filteredDisplayedLanguages.map(({ langCode, originalName, translatedName }) => (
           <ListItem
             key={langCode}

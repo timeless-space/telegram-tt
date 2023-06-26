@@ -223,7 +223,7 @@ const EmojiPicker: FC<OwnProps & StateProps> = ({
       <div
         ref={containerRef}
         onScroll={handleContentScroll}
-        className={buildClassName('EmojiPicker-main no-selection', IS_TOUCH_ENV ? 'no-scrollbar' : 'custom-scroll')}
+        className={buildClassName('EmojiPicker-main no-selection', 'no-scrollbar')}
       >
         {allCategories.map((category, i) => (
           <EmojiCategory

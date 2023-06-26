@@ -111,7 +111,7 @@ const ListItem: FC<OwnProps> = ({
   const getTriggerElement = useCallback(() => containerRef.current, []);
 
   const getRootElement = useCallback(
-    () => containerRef.current!.closest('.custom-scroll'),
+    () => containerRef.current!.closest('.no-scrollbar'),
     [],
   );
 

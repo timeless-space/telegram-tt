@@ -114,7 +114,7 @@ const EditTopic: FC<OwnProps & StateProps> = ({
 
   return (
     <div className={styles.root}>
-      <div className={buildClassName(styles.content, 'custom-scroll')}>
+      <div className={buildClassName(styles.content, 'no-scrollbar')}>
         {!topic && <Loading />}
         {topic && (
           <>

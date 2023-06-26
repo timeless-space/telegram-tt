@@ -98,7 +98,7 @@ const StickerSearch: FC<OwnProps & StateProps> = ({
   }
 
   return (
-    <div ref={containerRef} className="StickerSearch custom-scroll" dir={lang.isRtl ? 'rtl' : undefined}>
+    <div ref={containerRef} className="StickerSearch no-scrollbar" dir={lang.isRtl ? 'rtl' : undefined}>
       {renderContent()}
     </div>
   );

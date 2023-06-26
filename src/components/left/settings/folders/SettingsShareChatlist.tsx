@@ -144,7 +144,7 @@ const SettingsShareChatlist: FC<OwnProps & StateProps> = ({
   const isDisabled = !chatsCount || isLoading;
 
   return (
-    <div className="settings-content no-border custom-scroll SettingsFoldersChatsPicker">
+    <div className="settings-content no-border no-scrollbar SettingsFoldersChatsPicker">
       <div className="settings-content-header">
         <AnimatedIcon
           size={STICKER_SIZE_FOLDER_SETTINGS}

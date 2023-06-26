@@ -21,7 +21,7 @@ const PreBlock: FC<OwnProps> = ({ text, noCopy }) => {
 
   return (
     <pre className={blockClass}>
-      <div className="pre-code custom-scroll-x">{text}</div>
+      <div className="pre-code no-scrollbar">{text}</div>
       <CodeOverlay
         text={text}
         className="code-overlay"

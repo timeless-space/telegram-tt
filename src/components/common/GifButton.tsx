@@ -72,7 +72,7 @@ const GifButton: FC<OwnProps> = ({
   const getTriggerElement = useCallback(() => ref.current, []);
 
   const getRootElement = useCallback(
-    () => ref.current!.closest('.custom-scroll, .no-scrollbar'),
+    () => ref.current!.closest('.no-scrollbar, .custom-scroll'),
     [],
   );
 

@@ -128,7 +128,7 @@ const SettingsDataStorage: FC<OwnProps & StateProps> = ({
   }
 
   return (
-    <div className="settings-content custom-scroll">
+    <div className="settings-content no-scrollbar">
       {renderAutoDownloadBlock(
         lang('AutoDownloadPhotosTitle'),
         'Photo',

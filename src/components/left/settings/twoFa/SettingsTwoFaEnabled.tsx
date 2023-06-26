@@ -30,7 +30,7 @@ const SettingsTwoFaEnabled: FC<OwnProps> = ({
   });
 
   return (
-    <div className="settings-content two-fa custom-scroll">
+    <div className="settings-content two-fa no-scrollbar">
       <div className="settings-content-header no-border">
         <AnimatedIconWithPreview
           tgsUrl={LOCAL_TGS_URLS.Lock}

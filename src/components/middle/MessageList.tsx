@@ -575,7 +575,7 @@ const MessageList: FC<OwnProps & StateProps> = ({
   const isBotInfoEmpty = botInfo && !botInfo.description && !botInfo.gif && !botInfo.photo;
 
   const className = buildClassName(
-    'MessageList custom-scroll',
+    'MessageList no-scrollbar',
     noAvatars && 'no-avatars',
     !canPost && 'no-composer',
     type === 'pinned' && 'type-pinned',

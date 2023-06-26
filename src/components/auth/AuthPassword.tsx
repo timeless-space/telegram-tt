@@ -29,7 +29,7 @@ const AuthPassword: FC<StateProps> = ({
   }, [setAuthPassword]);
 
   return (
-    <div id="auth-password-form" className="custom-scroll">
+    <div id="auth-password-form" className="no-scrollbar">
       <div className="auth-form">
         <MonkeyPassword isPasswordVisible={showPassword} />
         <h1>{lang('Login.Header.Password')}</h1>

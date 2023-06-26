@@ -367,8 +367,7 @@ const CustomEmojiPicker: FC<OwnProps & StateProps> = ({
   const listClassName = buildClassName(
     pickerStyles.main,
     pickerStyles.main_customEmoji,
-    'no-selection',
-    IS_TOUCH_ENV ? 'no-scrollbar' : 'custom-scroll',
+    'no-selection no-scrollbar',
   );
 
   return (

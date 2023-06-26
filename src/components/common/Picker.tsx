@@ -127,7 +127,7 @@ const Picker: FC<OwnProps> = ({
   return (
     <div className="Picker">
       {isSearchable && (
-        <div className="picker-header custom-scroll" dir={lang.isRtl ? 'rtl' : undefined}>
+        <div className="picker-header no-scrollbar" dir={lang.isRtl ? 'rtl' : undefined}>
           {lockedSelectedIds.map((id, i) => (
             <PickerSelectedItem
               chatOrUserId={id}
@@ -159,7 +159,7 @@ const Picker: FC<OwnProps> = ({
 
       {viewportIds?.length ? (
         <InfiniteScroll
-          className="picker-list custom-scroll"
+          className="picker-list no-scrollbar"
           items={viewportIds}
           onLoadMore={getMore}
           noScrollRestore={noScrollRestore}

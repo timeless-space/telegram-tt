@@ -347,7 +347,7 @@ const StickerPicker: FC<OwnProps & StateProps> = ({
         ref={containerRef}
         onMouseMove={handleMouseMove}
         onScroll={handleContentScroll}
-        className={buildClassName(styles.main, 'no-selection', IS_TOUCH_ENV ? 'no-scrollbar' : 'custom-scroll')}
+        className={buildClassName(styles.main, 'no-selection', 'no-scrollbar')}
       >
         {allSets.map((stickerSet, i) => (
           <StickerSet

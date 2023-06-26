@@ -175,9 +175,9 @@ const ChatList: FC<OwnProps> = ({
         containerRef.current.scrollTo({ top: HEIGHT_HEADER_FIXED });
         setTimeout(() => {
           firstScroll.current = false;
-        }, 200)
+        }, 200);
       }
-    }, 0)
+    }, 0);
     return viewportIds!.map((id, i) => {
       const isPinned = viewportOffset + i < pinnedCount;
       const offsetTop = archiveHeight + (viewportOffset + i) * CHAT_HEIGHT_PX + HEIGHT_HEADER_FIXED;
@@ -205,17 +205,16 @@ const ChatList: FC<OwnProps> = ({
     const scrollTop = event.currentTarget.scrollTop;
     const scrollPercentRounded = Math.min(
       100,
-      Math.round((scrollTop / HEIGHT_HEADER_FIXED) * 100)
+      Math.round((scrollTop / HEIGHT_HEADER_FIXED) * 100),
     );
     const opacity = 1 - scrollPercentRounded * 0.01;
-    const opacityOffset =
-      scrollTop >= HEIGHT_HEADER_FIXED + 10 || scrollPercentRounded == 100
-        ? 0
-        : opacity;
+    // eslint-disable-next-line eqeqeq
+    const opacityOffset = scrollTop >= HEIGHT_HEADER_FIXED + 10 || scrollPercentRounded == 100 ? 0 : opacity;
 
+    // eslint-disable-next-line eqeqeq
     const translatePixel = scrollTop >= HEIGHT_HEADER_FIXED || scrollPercentRounded == 100 ? 0 : Math.min(
       HEIGHT_HEADER_FIXED,
-      ((100 - scrollPercentRounded) * HEIGHT_HEADER_FIXED) / 100
+      ((100 - scrollPercentRounded) * HEIGHT_HEADER_FIXED) / 100,
     );
     const tabFolderTranslatePixel = translatePixel;
     const currentPropertyInStorage = sessionStorage.getItem(activeChatFolder);
@@ -223,23 +222,23 @@ const ChatList: FC<OwnProps> = ({
       sessionStorage.setItem(
         activeChatFolder,
         JSON.stringify({
-          scrollPercentRounded: scrollPercentRounded,
-          tabFolderTranslatePixel: tabFolderTranslatePixel,
-          opacityOffset: opacityOffset,
-        })
+          scrollPercentRounded,
+          tabFolderTranslatePixel,
+          opacityOffset,
+        }),
       );
     }
-    doc.style.setProperty("--header-translate", `-${scrollPercentRounded}%`);
+    doc.style.setProperty('--header-translate', `-${scrollPercentRounded}%`);
     doc.style.setProperty(
-      "--tab-folder-translate",
-      `${tabFolderTranslatePixel}px`
+      '--tab-folder-translate',
+      `${tabFolderTranslatePixel}px`,
     );
-    doc.style.setProperty("--fi-show-header-opacity", `${opacityOffset}`);
+    doc.style.setProperty('--fi-show-header-opacity', `${opacityOffset}`);
   }
 
   return (
     <InfiniteScroll
-      className={buildClassName('chat-list custom-scroll', isForumPanelOpen && 'forum-panel-open')}
+      className={buildClassName('chat-list no-scrollbar', isForumPanelOpen && 'forum-panel-open')}
       ref={containerRef}
       items={viewportIds}
       itemSelector=".ListItem:not(.chat-item-archive)"

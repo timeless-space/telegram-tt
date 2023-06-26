@@ -86,7 +86,7 @@ const BotCommandTooltip: FC<OwnProps> = ({
   }
 
   const className = buildClassName(
-    'BotCommandTooltip composer-tooltip custom-scroll',
+    'BotCommandTooltip composer-tooltip no-scrollbar',
     transitionClassNames,
   );
 

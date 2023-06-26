@@ -272,7 +272,7 @@ const ManageInvites: FC<OwnProps & StateProps> = ({
 
   return (
     <div className="Management ManageInvites">
-      <div className="custom-scroll">
+      <div className="no-scrollbar">
         <div className="section">
           <AnimatedIcon
             tgsUrl={LOCAL_TGS_URLS.Invite}

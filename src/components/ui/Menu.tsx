@@ -125,7 +125,7 @@ const Menu: FC<OwnProps> = ({
   );
 
   const bubbleFullClassName = buildClassName(
-    'bubble menu-container custom-scroll',
+    'bubble menu-container no-scrollbar',
     positionY,
     positionX,
     footer && 'with-footer',

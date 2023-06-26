@@ -89,7 +89,7 @@ const MentionTooltip: FC<OwnProps> = ({
   }
 
   const className = buildClassName(
-    'MentionTooltip composer-tooltip custom-scroll',
+    'MentionTooltip composer-tooltip no-scrollbar',
     transitionClassNames,
   );
 

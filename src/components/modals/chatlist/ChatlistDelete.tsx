@@ -50,7 +50,7 @@ const ChatlistDelete: FC<OwnProps> = ({
           <div className={styles.description}>
             {renderText(lang('FolderLinkSubtitleRemove'), ['simple_markdown', 'emoji'])}
           </div>
-          <div className={buildClassName(styles.pickerWrapper, 'custom-scroll')}>
+          <div className={buildClassName(styles.pickerWrapper, 'no-scrollbar')}>
             <div className={styles.pickerHeader}>
               <div className={styles.pickerHeaderInfo}>
                 {lang('FolderLinkHeaderChatsQuit', selectedPeerIds.length, 'i')}

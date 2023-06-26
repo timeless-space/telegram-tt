@@ -119,7 +119,7 @@ const SettingsPrivacyBlockedUsers: FC<OwnProps & StateProps> = ({
           </p>
         </div>
 
-        <div className="chat-list custom-scroll">
+        <div className="chat-list no-scrollbar">
           {blockedIds?.length ? (
             <div className="scroll-container">
               {blockedIds!.map((contactId, i) => renderContact(contactId, i, 0))}

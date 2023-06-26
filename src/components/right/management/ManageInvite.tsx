@@ -156,7 +156,7 @@ const ManageInvite: FC<OwnProps & StateProps> = ({
 
   return (
     <div className="Management ManageInvite">
-      <div className="custom-scroll">
+      <div className="no-scrollbar">
         <div className="section">
           <Checkbox
             label={lang('ApproveNewMembers')}

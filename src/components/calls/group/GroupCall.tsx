@@ -323,7 +323,7 @@ const GroupCall: FC<OwnProps & StateProps> = ({
         </Button>
       </div>
 
-      <div className="scrollable custom-scroll">
+      <div className="scrollable no-scrollbar">
         <GroupCallParticipantStreams onDoubleClick={handleStreamsDoubleClick} />
 
         {(!isLandscapeLayout || isSidebarOpen)

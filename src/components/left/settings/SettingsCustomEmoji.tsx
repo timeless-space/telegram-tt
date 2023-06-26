@@ -66,7 +66,7 @@ const SettingsCustomEmoji: FC<OwnProps & StateProps> = ({
   ), [customEmojiSetIds, stickerSetsById]);
 
   return (
-    <div className="settings-content custom-scroll">
+    <div className="settings-content no-scrollbar">
       {customEmojiSets && (
         <div className="settings-item">
           <Checkbox

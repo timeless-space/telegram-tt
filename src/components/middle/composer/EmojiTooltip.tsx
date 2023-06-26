@@ -136,7 +136,7 @@ const EmojiTooltip: FC<OwnProps> = ({
   }, [selectedIndex]);
 
   const className = buildClassName(
-    'EmojiTooltip composer-tooltip custom-scroll-x',
+    'EmojiTooltip composer-tooltip no-scrollbar',
     transitionClassNames,
   );
 

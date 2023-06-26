@@ -150,7 +150,7 @@ const SettingsPrivacy: FC<OwnProps & StateProps> = ({
   }
 
   return (
-    <div className="settings-content custom-scroll">
+    <div className="settings-content no-scrollbar">
       <div className="settings-item pt-3">
         <ListItem
           icon="delete-user"

@@ -16,7 +16,7 @@ const DateSuggest: FC<OwnProps> = ({
 }) => {
   const suggestions = useMemo(() => getSuggestionsFromDate(searchDate), [searchDate]);
   return (
-    <section className="DateSuggest custom-scroll custom-scroll-x">
+    <section className="DateSuggest no-scrollbar">
       {suggestions.map(({ date, text }) => {
         return (
           <div

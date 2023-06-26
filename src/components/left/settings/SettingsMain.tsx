@@ -63,7 +63,7 @@ const SettingsMain: FC<OwnProps & StateProps> = ({
   }, [lastSyncTime, loadAuthorizations]);
 
   return (
-    <div className="settings-content custom-scroll">
+    <div className="settings-content no-scrollbar">
       <div className="settings-main-menu">
         {currentUser && (
           <ProfileInfo

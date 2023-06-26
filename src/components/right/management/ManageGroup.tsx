@@ -323,7 +323,7 @@ const ManageGroup: FC<OwnProps & StateProps> = ({
 
   return (
     <div className="Management">
-      <div className="custom-scroll">
+      <div className="no-scrollbar">
         <div className="section">
           <AvatarEditable
             isForForum={isForumEnabled}

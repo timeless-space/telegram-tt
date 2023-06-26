@@ -131,7 +131,6 @@ const LeftMainHeader: FC<OwnProps & StateProps> = ({
     lang, connectionState, isSyncing, isMessageListOpen, isConnectionStatusMinimized, !areChatsLoaded,
   );
 
-
   const handleLockScreenHotkey = useCallback((e: KeyboardEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -390,7 +389,6 @@ const LeftMainHeader: FC<OwnProps & StateProps> = ({
           focused={isSearchFocused}
           isLoading={isLoading || connectionStatusPosition === 'minimized'}
           spinnerColor={connectionStatusPosition === 'minimized' ? 'gray' : undefined}
-          // spinnerBackgroundColor={connectionStatusPosition === 'minimized' && theme === 'light' ? 'light' : undefined}
           spinnerBackgroundColor={connectionStatusPosition === 'minimized' && theme === 'light' ? 'light' : undefined}
           placeholder={searchInputPlaceholder}
           autoComplete="off"

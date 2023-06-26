@@ -55,7 +55,7 @@ const ChatlistNew: FC<OwnProps> = ({ invite }) => {
       <div className={styles.description}>
         {renderText(lang('FolderLinkSubtitle', invite.title), ['simple_markdown', 'emoji'])}
       </div>
-      <div className={buildClassName(styles.pickerWrapper, 'custom-scroll')}>
+      <div className={buildClassName(styles.pickerWrapper, 'no-scrollbar')}>
         <div className={styles.pickerHeader}>
           <div className={styles.pickerHeaderInfo}>
             {lang('FolderLinkHeaderChatsJoin', selectedCount, 'i')}

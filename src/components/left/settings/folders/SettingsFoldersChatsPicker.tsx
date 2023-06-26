@@ -190,7 +190,7 @@ const SettingsFoldersChatsPicker: FC<OwnProps & StateProps> = ({
 
   return (
     <div className="Picker SettingsFoldersChatsPicker">
-      <div className="picker-header custom-scroll">
+      <div className="picker-header no-scrollbar">
         {selectedChatTypes.map(renderSelectedChatType)}
         {selectedIds.map((id, i) => (
           <PickerSelectedItem
@@ -209,7 +209,7 @@ const SettingsFoldersChatsPicker: FC<OwnProps & StateProps> = ({
         />
       </div>
       <InfiniteScroll
-        className="picker-list custom-scroll"
+        className="picker-list no-scrollbar"
         itemSelector=".chat-item"
         items={viewportIds}
         onLoadMore={getMore}

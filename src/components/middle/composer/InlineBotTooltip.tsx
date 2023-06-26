@@ -131,7 +131,7 @@ const InlineBotTooltip: FC<OwnProps> = ({
 
   const className = buildClassName(
     'InlineBotTooltip composer-tooltip',
-    IS_TOUCH_ENV ? 'no-scrollbar' : 'custom-scroll',
+    'no-scrollbar',
     renderedIsGallery && 'gallery',
     transitionClassNames,
   );

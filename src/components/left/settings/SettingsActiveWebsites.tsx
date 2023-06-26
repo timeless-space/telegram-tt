@@ -126,7 +126,7 @@ const SettingsActiveWebsites: FC<OwnProps & StateProps> = ({
   if (!orderedHashes.length) return undefined;
 
   return (
-    <div className="settings-content custom-scroll">
+    <div className="settings-content no-scrollbar">
       <div className="settings-item">
         <ListItem
           className="destructive mb-0 no-icon"

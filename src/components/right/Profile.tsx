@@ -454,7 +454,7 @@ const Profile: FC<OwnProps & StateProps> = ({
   return (
     <InfiniteScroll
       ref={containerRef}
-      className="Profile custom-scroll"
+      className="Profile no-scrollbar"
       itemSelector={`.shared-media-transition > .Transition_slide-active.${resultType}-list > .scroll-item`}
       items={canRenderContent ? viewportIds : undefined}
       cacheBuster={cacheBuster}

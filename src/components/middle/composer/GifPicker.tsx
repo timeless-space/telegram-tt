@@ -66,7 +66,7 @@ const GifPicker: FC<OwnProps & StateProps> = ({
     <div>
       <div
         ref={containerRef}
-        className={buildClassName('GifPicker', className, IS_TOUCH_ENV ? 'no-scrollbar' : 'custom-scroll')}
+        className={buildClassName('GifPicker', className, 'no-scrollbar')}
       >
         {!canSendGifs ? (
           <div className="picker-disabled">Sending GIFs is not allowed in this chat.</div>

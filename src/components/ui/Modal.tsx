@@ -163,7 +163,7 @@ const Modal: FC<OwnProps & StateProps> = ({
           <div className="modal-backdrop" onClick={!noBackdropClose ? onClose : undefined} />
           <div className="modal-dialog" ref={dialogRef}>
             {renderHeader()}
-            <div className="modal-content custom-scroll" style={style}>
+            <div className="modal-content no-scrollbar" style={style}>
               {children}
             </div>
           </div>

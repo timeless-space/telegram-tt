@@ -339,7 +339,7 @@ const MessageContextMenu: FC<OwnProps> = ({
 
       <div
         className={buildClassName(
-          'MessageContextMenu_items scrollable-content custom-scroll',
+          'MessageContextMenu_items scrollable-content no-scrollbar',
           areItemsHidden && 'MessageContextMenu_items-hidden',
         )}
         style={menuStyle}

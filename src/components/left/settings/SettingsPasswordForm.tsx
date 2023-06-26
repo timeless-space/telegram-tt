@@ -62,7 +62,7 @@ const SettingsPasswordForm: FC<OwnProps> = ({
   });
 
   return (
-    <div className="settings-content password-form custom-scroll">
+    <div className="settings-content password-form no-scrollbar">
       <div className="settings-content-header no-border">
         <PasswordMonkey isBig isPasswordVisible={shouldShowPassword} />
       </div>

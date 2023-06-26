@@ -235,7 +235,7 @@ const SettingsActiveSessions: FC<OwnProps & StateProps> = ({
   }
 
   return (
-    <div className="settings-content custom-scroll SettingsActiveSessions">
+    <div className="settings-content no-scrollbar SettingsActiveSessions">
       {currentSession && renderCurrentSession(currentSession)}
       {hasOtherSessions && renderOtherSessions(otherSessionHashes)}
       {renderAutoTerminate()}

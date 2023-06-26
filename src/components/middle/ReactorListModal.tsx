@@ -181,7 +181,7 @@ const ReactorListModal: FC<OwnProps & StateProps> = ({
       <div dir={lang.isRtl ? 'rtl' : undefined} className="reactor-list-wrapper">
         {viewportIds?.length ? (
           <InfiniteScroll
-            className="reactor-list custom-scroll"
+            className="reactor-list no-scrollbar"
             items={viewportIds}
             onLoadMore={getMore}
           >
