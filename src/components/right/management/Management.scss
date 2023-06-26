@@ -5,7 +5,8 @@
 
   & > .custom-scroll {
     height: 100%;
-    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: hidden;
   }
 
   .personal-photo {
