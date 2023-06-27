@@ -92,16 +92,9 @@ const ChatList: FC<OwnProps> = ({
   useEffect(() => {
     // eslint-disable-next-line no-null/no-null
     if (containerRef.current) {
-      if (isExpandHeader === 'true') {
-        setTimeout(() => {
-          containerRef.current?.scrollTo({ top: 0 });
-        }, 0);
-      }
-      if (isExpandHeader === 'false') {
-        setTimeout(() => {
-          containerRef.current?.scrollTo({ top: HEIGHT_HEADER_FIXED });
-        }, 0);
-      }
+      setTimeout(() => {
+        containerRef.current?.scrollTo({ top: isExpandHeader === 'true' ? 0 : HEIGHT_HEADER_FIXED });
+      }, 0);
     }
   }, [containerRef, isExpandHeader]);
 
@@ -194,12 +187,13 @@ const ChatList: FC<OwnProps> = ({
         containerRef.current.scrollTo({ top: HEIGHT_HEADER_FIXED });
         setTimeout(() => {
           firstScroll.current = false;
-        }, 200)
+        }, 200);
       }
-    }, 0)
+    }, 0);
     return viewportIds!.map((id, i) => {
       const isPinned = viewportOffset + i < pinnedCount;
-      const offsetTop = archiveHeight + (viewportOffset + i) * CHAT_HEIGHT_PX + (allowAbsoluteHeader ? HEIGHT_HEADER_FIXED : 0);
+      const offsetTop = archiveHeight + (viewportOffset + i)
+        * CHAT_HEIGHT_PX + (allowAbsoluteHeader ? HEIGHT_HEADER_FIXED : 0);
 
       return (
         <Chat
@@ -225,17 +219,16 @@ const ChatList: FC<OwnProps> = ({
     const scrollTop = event.currentTarget.scrollTop;
     const scrollPercentRounded = Math.min(
       100,
-      Math.round((scrollTop / HEIGHT_HEADER_FIXED) * 100)
+      Math.round((scrollTop / HEIGHT_HEADER_FIXED) * 100),
     );
     const opacity = 1 - scrollPercentRounded * 0.01;
-    const opacityOffset =
-      scrollTop >= HEIGHT_HEADER_FIXED + 10 || scrollPercentRounded == 100
-        ? 0
-        : opacity;
+    const opacityOffset = scrollTop >= HEIGHT_HEADER_FIXED + 10 || scrollPercentRounded == 100
+      ? 0
+      : opacity;
 
     const translatePixel = scrollTop >= HEIGHT_HEADER_FIXED || scrollPercentRounded == 100 ? 0 : Math.min(
       HEIGHT_HEADER_FIXED,
-      ((100 - scrollPercentRounded) * HEIGHT_HEADER_FIXED) / 100
+      ((100 - scrollPercentRounded) * HEIGHT_HEADER_FIXED) / 100,
     );
     const tabFolderTranslatePixel = translatePixel;
     doc.style.setProperty('--disable-tab-click', 'none');

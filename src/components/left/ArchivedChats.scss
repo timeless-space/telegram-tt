@@ -3,7 +3,7 @@
   overflow: hidden;
 
   .chat-list {
-    height: auto;
+    height: calc(100% - var(--header-height));
   }
 
   .DropdownMenuFiller {
