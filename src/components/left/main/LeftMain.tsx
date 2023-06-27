@@ -159,18 +159,28 @@ const LeftMain: FC<OwnProps> = ({
       onMouseEnter={!IS_TOUCH_ENV ? handleMouseEnter : undefined}
       onMouseLeave={!IS_TOUCH_ENV ? handleMouseLeave : undefined}
     >
-      {/* <LeftMainHeader
-        shouldHideSearch={isForumPanelVisible}
-        content={content}
-        contactsFilter={contactsFilter}
-        onSearchQuery={onSearchQuery}
-        onSelectSettings={handleSelectSettings}
-        onSelectContacts={handleSelectContacts}
-        onSelectArchived={handleSelectArchived}
-        onReset={onReset}
-        shouldSkipTransition={shouldSkipTransition}
-        isClosingSearch={isClosingSearch}
-      /> */}
+      {
+        /**
+         * TL - Fix search bar issue
+         * Description:
+         *   - This trigger check when ChatList screen is opened
+         *   - Add fix-issue class to hide search bar when scroll up
+         */
+      }
+      <div className={`${content === LeftColumnContent.ChatList ? 'fix-issue' : ''}`}>
+        <LeftMainHeader
+          shouldHideSearch={isForumPanelVisible}
+          content={content}
+          contactsFilter={contactsFilter}
+          onSearchQuery={onSearchQuery}
+          onSelectSettings={handleSelectSettings}
+          onSelectContacts={handleSelectContacts}
+          onSelectArchived={handleSelectArchived}
+          onReset={onReset}
+          shouldSkipTransition={shouldSkipTransition}
+          isClosingSearch={isClosingSearch}
+        />
+      </div>
       <Transition
         name={shouldSkipTransition ? 'none' : 'zoomFade'}
         renderCount={TRANSITION_RENDER_COUNT}

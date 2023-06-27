@@ -10,13 +10,18 @@ const Spinner: FC<{
   backgroundColor?: 'light' | 'dark';
   className?: string;
 }> = ({
-  color = 'blue',
+  color = 'gray',
   backgroundColor,
   className,
 }) => {
   return (
+    /**
+      * TL - Decrease spinner size
+      * Description: Add custom-medium className to decrease spinner size by 75% with custom-medium className.
+      */
     <div className={buildClassName(
-      'Spinner', className, color, backgroundColor && 'with-background', backgroundColor && `bg-${backgroundColor}`,
+      // eslint-disable-next-line max-len
+      'Spinner custom-medium', className, color, backgroundColor && 'with-background', backgroundColor && `bg-${backgroundColor}`,
     )}
     >
       <div className="Spinner__inner" />

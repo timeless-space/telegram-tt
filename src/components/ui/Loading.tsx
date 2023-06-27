@@ -7,14 +7,21 @@ import buildClassName from '../../util/buildClassName';
 import './Loading.scss';
 
 type OwnProps = {
-  color?: 'blue' | 'white' | 'black' | 'yellow';
+  /**
+    * TL - Customize Loading Component
+    * Description: Add className property for custom style easier.
+    */
+  color?: 'blue' | 'white' | 'black' | 'yellow' | 'gray';
   backgroundColor?: 'light' | 'dark';
   onClick?: NoneToVoidFunction;
+  className?: string;
 };
 
-const Loading: FC<OwnProps> = ({ color = 'blue', backgroundColor, onClick }) => {
+const Loading: FC<OwnProps> = ({
+  color, backgroundColor, onClick, className,
+}) => {
   return (
-    <div className={buildClassName('Loading', onClick && 'interactive')} onClick={onClick}>
+    <div className={buildClassName('Loading', onClick && 'interactive', className)} onClick={onClick}>
       <Spinner color={color} backgroundColor={backgroundColor} />
     </div>
   );

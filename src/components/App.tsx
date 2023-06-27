@@ -29,7 +29,8 @@ import UiLoader from './common/UiLoader';
 // import Test from './components/test/TestNoRedundancy';
 
 import styles from './App.module.scss';
-import { setupBeforeInstallPrompt } from '../util/installPrompt';
+import { mobileSubscribe, mobileUnsubscribe } from '../util/notifications';
+import { changePaddingTopMobile } from '../util/tlCustomFunction';
 
 type StateProps = {
   authState: GlobalState['authState'];
@@ -195,8 +196,17 @@ const App: FC<StateProps> = ({
     }
   }
 
+  /**
+   * TL - Register global functions
+   * Description: Register global functions with properties of window object, you can call outline the web app.
+   */
   useLayoutEffect(() => {
+    const { signOut } = getActions();
+    (window as any).signOutGlobal = signOut;
+    (window as any).changePaddingTopMobileGlobal = changePaddingTopMobile;
     document.body.classList.add(styles.bg);
+    (window as any).mobileSubscribeGlobal = mobileSubscribe;
+    (window as any).mobileUnsubscribeGlobal = mobileUnsubscribe;
   }, []);
 
   useLayoutEffect(() => {
@@ -204,6 +214,7 @@ const App: FC<StateProps> = ({
       '--theme-background-color',
       theme === 'dark' ? DARK_THEME_BG_COLOR : LIGHT_THEME_BG_COLOR,
     );
+    sessionStorage.clear();
   }, [theme]);
 
   return (

@@ -66,6 +66,13 @@
   &.gray {
     .Spinner__inner {
       background-image: var(--spinner-gray-data);
+
+      /**
+        * TL - Gray color for dark mode
+        */
+      .theme-dark & {
+        background-image: var(--spinner-gray-data);
+      }
     }
   }
 
@@ -102,3 +109,10 @@
   }
 }
 
+/**
+  * TL - Decrease spinner size
+  * Description: Decrease spinner size by 75%. It uses in Spinner.tsx
+  */
+.custom-medium {
+  transform: scale(0.75);
+}

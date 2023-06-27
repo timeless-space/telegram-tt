@@ -8,6 +8,16 @@
 @import "../assets/fonts/roboto.css";
 @import "./print";
 
+/**
+ * TL - Declare variables to interact with header
+ */
+
+html {
+  --header-translate: -100%;
+  --tab-folder-translate: 0px;
+  --fi-show-header-opacity: 0;
+}
+
 html,
 body {
   width: 100%;
@@ -41,8 +51,10 @@ noscript {
   display: grid;
   align-content: center;
   justify-items: center;
+
   .nojs-video {
     pointer-events: none;
+
     &::-webkit-media-controls {
       display: none;
     }
@@ -212,7 +224,7 @@ body:not(.is-ios) {
   }
 
   &.not-shown {
-    display: none;
+    display: none !important;
   }
 
   &.slow {
@@ -301,4 +313,30 @@ body:not(.is-ios) {
     transform: scale(0.5);
     opacity: 0;
   }
+}
+
+
+@media (max-width: 600px) {
+  .tl-custom-padding {
+    /* stylelint-disable-next-line plugin/no-low-performance-animation-properties */
+    transition-property: all !important;
+    transition-duration: 0.5s !important;
+  }
+}
+
+.fix-issue {
+  // visibility: var(--fi-show-header);
+  opacity: var(--fi-show-header-opacity);
+  // height: var(--header-height);
+  transform: translateY(var(--header-translate));
+  transition: all 0.1s ease-out;
+  max-height: 56px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+}
+
+.padding-top-56px {
+  padding-top: 56px;
 }

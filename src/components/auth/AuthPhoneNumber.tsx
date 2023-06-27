@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 import { requestMeasure } from '../../lib/fasterdom/fasterdom';
 
-import monkeyPath from '../../assets/monkey.svg';
+// import monkeyPath from '../../assets/monkey.svg';
 
 import type { FC } from '../../lib/teact/teact';
 import React, {
@@ -14,7 +14,7 @@ import type { LangCode } from '../../types';
 import type { ApiCountryCode } from '../../api/types';
 
 import { IS_SAFARI, IS_TOUCH_ENV } from '../../util/windowEnvironment';
-import { preloadImage } from '../../util/files';
+// import { preloadImage } from '../../util/files';
 import preloadFonts from '../../util/fonts';
 import { pick } from '../../util/iteratees';
 import { formatPhoneNumber, getCountryCodesByIso, getCountryFromPhoneNumber } from '../../util/phoneNumber';
@@ -25,10 +25,8 @@ import useLangString from '../../hooks/useLangString';
 import { getSuggestedLanguage } from './helpers/getSuggestedLanguage';
 
 import Button from '../ui/Button';
-import Checkbox from '../ui/Checkbox';
 import InputText from '../ui/InputText';
-import Loading from '../ui/Loading';
-import CountryCodeInput from './CountryCodeInput';
+// import CountryCodeInput from './CountryCodeInput';
 
 type StateProps = Pick<GlobalState, (
   'connectionState' | 'authState' |
@@ -69,7 +67,11 @@ const AuthPhoneNumber: FC<StateProps> = ({
   const lang = useLang();
   // eslint-disable-next-line no-null/no-null
   const inputRef = useRef<HTMLInputElement>(null);
+  // eslint-disable-next-line no-null/no-null
+  const containerRef = useRef<HTMLDivElement>(null);
   const suggestedLanguage = getSuggestedLanguage();
+  const currentViewportHeight = useRef<number>(Number(window.visualViewport!.height));
+  const isFocused = useRef<boolean>(false);
 
   const continueText = useLangString(suggestedLanguage, 'ContinueOnThisLanguage', true);
   const [country, setCountry] = useState<ApiCountryCode | undefined>();
@@ -86,6 +88,46 @@ const AuthPhoneNumber: FC<StateProps> = ({
       inputRef.current!.focus();
     }
   }, [country]);
+
+  useEffect(() => {
+    setAuthRememberMe(true);
+
+    /*
+      TL - Prevent Vertical Center When Keyboard Focus
+      Description: Trigger input field is not scroll to vertical screen when focus in.
+      START
+    */
+    inputRef.current!.addEventListener('click', (_) => {
+      if (!isFocused.current) {
+        inputRef.current!.style.transform = 'translateY(-10000px)';
+        inputRef.current!.style.caretColor = 'transparent';
+        setTimeout(() => {
+          inputRef.current!.style.transform = 'none';
+          const scrollPixel = containerRef.current!.clientHeight
+            - currentViewportHeight.current + ((window as any).numberKeyboardHeight ?? 0) / 1.15 + 10;
+
+          if (scrollPixel > 0) {
+            containerRef.current!.style.transform = `translateY(${-scrollPixel}px)`;
+            containerRef.current!.style.transition = 'transform 0.2s linear';
+          }
+          setTimeout(() => {
+            inputRef.current!.style.caretColor = '#8774E1';
+          }, 180);
+        }, 80);
+        isFocused.current = true;
+      }
+    });
+
+    inputRef.current!.addEventListener('blur', (_) => {
+      isFocused.current = false;
+      containerRef.current!.style.transform = 'translateY(0)';
+      containerRef.current!.style.transition = 'transform 0.2s linear';
+    });
+    /*
+      TL - Prevent Vertical Center When Keyboard Focus
+      END
+    */
+  }, []);
 
   useEffect(() => {
     if (connectionState === 'connectionStateReady' && !authNearestCountry) {
@@ -155,10 +197,10 @@ const AuthPhoneNumber: FC<StateProps> = ({
     });
   }, []);
 
-  const handleCountryChange = useCallback((value: ApiCountryCode) => {
-    setCountry(value);
-    setPhoneNumber('');
-  }, []);
+  // const handleCountryChange = useCallback((value: ApiCountryCode) => {
+  //   setCountry(value);
+  //   setPhoneNumber('');
+  // }, []);
 
   const handlePhoneNumberChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     if (authError) {
@@ -169,7 +211,7 @@ const AuthPhoneNumber: FC<StateProps> = ({
     if (!isPreloadInitiated) {
       isPreloadInitiated = true;
       preloadFonts();
-      void preloadImage(monkeyPath);
+      // void preloadImage(monkeyPath);
     }
 
     const { value, selectionStart, selectionEnd } = e.target;
@@ -194,6 +236,7 @@ const AuthPhoneNumber: FC<StateProps> = ({
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    inputRef.current!.blur();
 
     if (authIsLoading) {
       return;
@@ -210,47 +253,52 @@ const AuthPhoneNumber: FC<StateProps> = ({
 
   const isAuthReady = authState === 'authorizationStateWaitPhoneNumber';
 
+  // const handlePhoneNumberBlur = useCallback(() => setIsTouched(false), []);
+
   return (
-    <div id="auth-phone-number-form" className="custom-scroll">
-      <div className="auth-form">
+    <div className="custom-wrapper">
+      <div
+        ref={containerRef}
+        className="auth-form"
+      >
         <div id="logo" />
-        <h1>Telegram</h1>
-        <p className="note">{lang('StartText')}</p>
+        <h1>Sign in to Telegram</h1>
+        <p className="note">{lang('StartText1')}<br />{lang('StartText2')}</p>
         <form className="form" action="" onSubmit={handleSubmit}>
-          <CountryCodeInput
+          {/* <CountryCodeInput
             id="sign-in-phone-code"
             value={country}
             isLoading={!authNearestCountry && !country}
             onChange={handleCountryChange}
-          />
+          /> */}
           <InputText
             ref={inputRef}
+            className="relative"
             id="sign-in-phone-number"
             label={lang('Login.PhonePlaceholder')}
             value={fullNumber}
             error={authError && lang(authError)}
+            loadingSize="medium"
             inputMode="tel"
             onChange={handlePhoneNumberChange}
             onPaste={IS_SAFARI ? handlePaste : undefined}
+            onLoading={!authNearestCountry && !country}
+            disabled={!authNearestCountry && !country}
           />
-          <Checkbox
-            id="sign-in-keep-session"
-            label="Keep me signed in"
-            checked={Boolean(authRememberMe)}
-            onChange={handleKeepSessionChange}
-          />
-          {canSubmit && (
-            isAuthReady ? (
-              <Button type="submit" ripple isLoading={authIsLoading}>{lang('Login.Next')}</Button>
-            ) : (
-              <Loading />
-            )
-          )}
-          {isAuthReady && (
+
+          <Button
+            className={`capitalize-text ${canSubmit && isAuthReady ? 'btn-enable' : 'btn-disable'}`}
+            type="submit"
+            disabled={!canSubmit || !isAuthReady}
+            ripple={(canSubmit && isAuthReady) || '' || undefined}
+            isLoading={authIsLoading}
+          >{lang('Login.Next')}
+          </Button>
+          {/* {isAuthReady && false && (
             <Button isText ripple isLoading={authIsLoadingQrCode} onClick={handleGoToAuthQrCode}>
               {lang('Login.QR.Login')}
             </Button>
-          )}
+          )} */}
           {suggestedLanguage && suggestedLanguage !== language && continueText && (
             <Button isText isLoading={isLoading} onClick={handleLangChange}>{continueText}</Button>
           )}

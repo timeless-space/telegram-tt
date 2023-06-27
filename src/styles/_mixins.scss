@@ -5,6 +5,9 @@
   }
 }
 
+/**
+ * TL - Custom overflow with scrollbar
+ */
 @mixin overflow-y-overlay() {
   @supports (overflow-y: overlay) {
     overflow-y: overlay;

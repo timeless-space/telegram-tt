@@ -13,8 +13,7 @@ import useHistoryBack from '../../hooks/useHistoryBack';
 import useLang from '../../hooks/useLang';
 
 import InputText from '../ui/InputText';
-import Loading from '../ui/Loading';
-import TrackingMonkey from '../common/TrackingMonkey';
+import { fallbackLangPackInitial as langPack } from '../../util/fallbackLangPackInitial';
 
 type StateProps = Pick<GlobalState, 'authPhoneNumber' | 'authIsCodeViaApp' | 'authIsLoading' | 'authError'>;
 
@@ -35,15 +34,54 @@ const AuthCode: FC<StateProps> = ({
   const lang = useLang();
   // eslint-disable-next-line no-null/no-null
   const inputRef = useRef<HTMLInputElement>(null);
+  // eslint-disable-next-line no-null/no-null
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const [code, setCode] = useState<string>('');
   const [isTracking, setIsTracking] = useState(false);
-  const [trackingDirection, setTrackingDirection] = useState(1);
+  const currentViewportHeight = useRef<number>(Number(window.visualViewport!.height));
+  const isFocused = useRef<boolean>(false);
 
   useEffect(() => {
     if (!IS_TOUCH_ENV) {
       inputRef.current!.focus();
     }
+
+    /*
+      TL - Prevent Vertical Center When Keyboard Focus
+      Description: Trigger input field is not scroll to vertical screen when focus in.
+      START
+    */
+    inputRef.current!.addEventListener('focusin', (_) => {
+      if (!isFocused.current) {
+        inputRef.current!.style.transform = 'translateY(-10000px)';
+        inputRef.current!.style.caretColor = 'transparent';
+        setTimeout(() => {
+          inputRef.current!.style.transform = 'none';
+          const scrollPixel = containerRef.current!.clientHeight
+            - currentViewportHeight.current + ((window as any).numberKeyboardHeight ?? 0) / 1.15 + 10;
+
+          if (scrollPixel > 0) {
+            containerRef.current!.style.transform = `translateY(${-scrollPixel}px)`;
+            containerRef.current!.style.transition = 'transform 0.2s linear';
+          }
+          setTimeout(() => {
+            inputRef.current!.style.caretColor = '#8774E1';
+          }, 180);
+        }, 80);
+        isFocused.current = true;
+      }
+    });
+
+    inputRef.current!.addEventListener('blur', (_) => {
+      isFocused.current = false;
+      containerRef.current!.style.transform = 'translateY(0)';
+      containerRef.current!.style.transition = 'transform 0.2s linear';
+    });
+    /*
+      TL - Prevent Vertical Center When Keyboard Focus
+      END
+    */
   }, []);
 
   useHistoryBack({
@@ -87,15 +125,10 @@ const AuthCode: FC<StateProps> = ({
   }
 
   return (
-    <div id="auth-code-form" className="custom-scroll">
-      <div className="auth-form">
-        <TrackingMonkey
-          code={code}
-          codeLength={CODE_LENGTH}
-          isTracking={isTracking}
-          trackingDirection={trackingDirection}
-        />
-        <h1>
+    <div className="custom-wrapper">
+      <div ref={containerRef} className="auth-form">
+        <div id="logo" />
+        <h1 className="flex center">
           {authPhoneNumber}
           <div
             className="auth-number-edit div-button"
@@ -112,6 +145,7 @@ const AuthCode: FC<StateProps> = ({
         </p>
         <InputText
           ref={inputRef}
+          className="custom-input noMarginBottom"
           id="sign-in-code"
           label={lang('Code')}
           onInput={onCodeChange}
@@ -119,8 +153,9 @@ const AuthCode: FC<StateProps> = ({
           error={authError && lang(authError)}
           autoComplete="off"
           inputMode="numeric"
+          onLoading={authIsLoading}
+          loadingSize="medium"
         />
-        {authIsLoading && <Loading />}
       </div>
     </div>
   );

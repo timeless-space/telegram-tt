@@ -24,7 +24,11 @@ type OwnProps = {
   value?: string;
   focused?: boolean;
   isLoading?: boolean;
-  spinnerColor?: 'yellow';
+  /**
+    * TL - Add gray color for loading component
+    * Description: Add new color to Spinner, fix typescript error
+    */
+  spinnerColor?: 'yellow' | 'gray';
   spinnerBackgroundColor?: 'light';
   placeholder?: string;
   disabled?: boolean;

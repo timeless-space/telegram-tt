@@ -1,5 +1,7 @@
 @import "./mixins";
 
+@import "./mixins";
+
 // Common styles for all media-type components across the app.
 .media-inner {
   position: relative;
@@ -98,6 +100,11 @@
   height: 100%;
   padding: 0.5rem 0.4375rem 0.5rem 0.4375rem;
 
+  /**
+    * TL - Custom scrollbar for chat list
+    * Description: Make scrollbar anchor at the last item.
+    */
+  overflow-anchor: auto;
   overflow-y: auto;
   @include overflow-y-overlay();
 

@@ -9,7 +9,23 @@ export const fallbackLangPackInitial = {
   },
   SentAppCode: {
     key: 'SentAppCode',
-    value: 'We\'ve sent the code to the **Telegram** app on your other device.',
+    value: 'We have sent you a message in ',
+  },
+  SentAppCode2: {
+    key: 'SentAppCode',
+    value: 'Telegram with the verfication code.',
+  },
+  /**
+    * TL - Add constants language
+    * Description: Add new constants language to app. Is uses in AuthCode.tsx
+    */
+  VerifyAppCode: {
+    key: 'VerifyAppCode',
+    value: '5 digits verification code',
+  },
+  EnterCode: {
+    key: 'EnterCode',
+    value: 'Enter verification code',
   },
   'Login.JustSentSms': {
     key: 'Login.JustSentSms',

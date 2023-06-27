@@ -2,16 +2,48 @@
   height: 100%;
 }
 
+/**
+  *TL - Custom styles for Auth Screen
+  *  CUSTOM START
+  */
+.custom-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+.flex {
+  display: flex !important;
+}
+
+.center {
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.noMarginBottom {
+  margin-bottom: 0 !important;
+}
+
 .auth-form {
   width: 100%;
   max-width: 25.5rem;
   margin: 0 auto;
-  padding: 6rem 1rem 1rem;
+  padding: 6rem 1rem 0 1rem;
   text-align: center;
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch !important;
 
   @media (min-width: 600px) and (min-height: 450px) {
-    padding: 6.8125rem 1.5rem 1.5rem;
+    padding: 6.8125rem 1.5rem 0 1.5rem;
 
+    /**
+    *TL - Custom styles for Auth Screen
+    *  CUSTOM END
+    */
     &.qr {
       padding-top: 4rem;
     }
