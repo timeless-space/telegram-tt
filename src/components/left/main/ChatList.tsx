@@ -45,12 +45,14 @@ type OwnProps = {
   onSettingsScreenSelect: (screen: SettingsScreens) => void;
   onLeftColumnContentChange: (content: LeftColumnContent) => void;
   activeChatFolder?: number;
+  allowAbsoluteHeader?: boolean;
 };
 
 const INTERSECTION_THROTTLE = 200;
 const DRAG_ENTER_DEBOUNCE = 500;
 const RESERVED_HOTKEYS = new Set(['9', '0']);
 const HEIGHT_HEADER_FIXED = 56;
+let isScrolling: any;
 
 const ChatList: FC<OwnProps> = ({
   folderType,
@@ -62,7 +64,7 @@ const ChatList: FC<OwnProps> = ({
   foldersDispatch,
   onSettingsScreenSelect,
   onLeftColumnContentChange,
-  activeChatFolder,
+  allowAbsoluteHeader = false,
 }) => {
   const { openChat, openNextChat, closeForumPanel } = getActions();
   // eslint-disable-next-line no-null/no-null
@@ -83,8 +85,25 @@ const ChatList: FC<OwnProps> = ({
     ? archiveSettings.isMinimized ? ARCHIVE_MINIMIZED_HEIGHT : CHAT_HEIGHT_PX : 0;
 
   const { orderDiffById, getAnimationType } = useOrderDiff(orderedIds);
+  const isExpandHeader = sessionStorage.getItem('isExpandHeader');
 
   const [viewportIds, getMore] = useInfiniteScroll(undefined, orderedIds, undefined, CHAT_LIST_SLICE);
+
+  useEffect(() => {
+    // eslint-disable-next-line no-null/no-null
+    if (containerRef.current) {
+      if (isExpandHeader === 'true') {
+        setTimeout(() => {
+          containerRef.current?.scrollTo({ top: 0 });
+        }, 0);
+      }
+      if (isExpandHeader === 'false') {
+        setTimeout(() => {
+          containerRef.current?.scrollTo({ top: HEIGHT_HEADER_FIXED });
+        }, 0);
+      }
+    }
+  }, [containerRef, isExpandHeader]);
 
   // Support <Alt>+<Up/Down> to navigate between chats
   useHotkeys(isActive && orderedIds?.length ? {
@@ -171,7 +190,7 @@ const ChatList: FC<OwnProps> = ({
 
     const pinnedCount = getPinnedChatsCount(resolvedFolderId) || 0;
     setTimeout(() => {
-      if (containerRef.current && firstScroll.current) {
+      if (containerRef.current && firstScroll.current && allowAbsoluteHeader) {
         containerRef.current.scrollTo({ top: HEIGHT_HEADER_FIXED });
         setTimeout(() => {
           firstScroll.current = false;
@@ -180,7 +199,7 @@ const ChatList: FC<OwnProps> = ({
     }, 0)
     return viewportIds!.map((id, i) => {
       const isPinned = viewportOffset + i < pinnedCount;
-      const offsetTop = archiveHeight + (viewportOffset + i) * CHAT_HEIGHT_PX + HEIGHT_HEADER_FIXED;
+      const offsetTop = archiveHeight + (viewportOffset + i) * CHAT_HEIGHT_PX + (allowAbsoluteHeader ? HEIGHT_HEADER_FIXED : 0);
 
       return (
         <Chat
@@ -201,6 +220,7 @@ const ChatList: FC<OwnProps> = ({
 
   function handleScroll(event: React.UIEvent<HTMLDivElement, UIEvent>) {
     if (firstScroll.current) return;
+    clearTimeout(isScrolling);
     const doc = document.documentElement;
     const scrollTop = event.currentTarget.scrollTop;
     const scrollPercentRounded = Math.min(
@@ -218,23 +238,17 @@ const ChatList: FC<OwnProps> = ({
       ((100 - scrollPercentRounded) * HEIGHT_HEADER_FIXED) / 100
     );
     const tabFolderTranslatePixel = translatePixel;
-    const currentPropertyInStorage = sessionStorage.getItem(activeChatFolder);
-    if (currentPropertyInStorage) {
-      sessionStorage.setItem(
-        activeChatFolder,
-        JSON.stringify({
-          scrollPercentRounded: scrollPercentRounded,
-          tabFolderTranslatePixel: tabFolderTranslatePixel,
-          opacityOffset: opacityOffset,
-        })
-      );
-    }
-    doc.style.setProperty("--header-translate", `-${scrollPercentRounded}%`);
+    doc.style.setProperty('--disable-tab-click', 'none');
+    isScrolling = setTimeout(() => {
+      doc.style.setProperty('--disable-tab-click', 'auto');
+    }, 150);
+    sessionStorage.setItem('isExpandHeader', opacityOffset === 1 ? 'true' : 'false');
+    doc.style.setProperty('--header-translate', `-${scrollPercentRounded}%`);
     doc.style.setProperty(
-      "--tab-folder-translate",
-      `${tabFolderTranslatePixel}px`
+      '--tab-folder-translate',
+      `${tabFolderTranslatePixel}px`,
     );
-    doc.style.setProperty("--fi-show-header-opacity", `${opacityOffset}`);
+    doc.style.setProperty('--show-header-opacity', `${opacityOffset}`);
   }
 
   return (
