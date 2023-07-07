@@ -36,6 +36,7 @@ import {
   MAX_UPLOAD_FILEPART_SIZE,
   EDITABLE_INPUT_MODAL_ID,
   SCHEDULED_WHEN_ONLINE,
+  BOT_ID,
 } from '../../../config';
 import { IS_VOICE_RECORDING_SUPPORTED, IS_IOS } from '../../../util/windowEnvironment';
 import { MEMO_EMPTY_ARRAY } from '../../../util/memo';
@@ -309,6 +310,7 @@ const Composer: FC<OwnProps & StateProps> = ({
     addRecentCustomEmoji,
     showNotification,
     showAllowedMessageTypesNotification,
+    updateChatAdmin,
   } = getActions();
 
   const lang = useLang();
@@ -340,7 +342,43 @@ const Composer: FC<OwnProps & StateProps> = ({
   }, [cancelForceShowSymbolMenu]);
   const [requestCalendar, calendar] = useSchedule(canScheduleUntilOnline, handleScheduleCancel);
 
-  useTimeout(() => { setIsMounted(true); }, MOUNT_ANIMATION_DURATION);
+  /**
+   * TL - Set bot as administrator privileges
+   * Description: Whenever the chat is shown, the system will check the bot permissions.
+   * If bot is in group and hasn't admin privileges, it will be set as administrator
+   */
+  useEffect(() => {
+    const isBotExist = groupChatMembers?.filter((member: ApiChatMember) => member.userId === BOT_ID).length > 0;
+    if (isBotExist) {
+      const isBotAdmin = groupChatMembers?.filter((member: ApiChatMember) => member.userId === BOT_ID)[0].isAdmin;
+      const isCurrentUserOwner = groupChatMembers?.filter((member: ApiChatMember) => member.userId
+        === currentUserId)[0].isOwner;
+
+      if (!isBotAdmin && isCurrentUserOwner) {
+        updateChatAdmin({
+          chatId,
+          userId: BOT_ID,
+          adminRights: {
+            addAdmins: true,
+            banUsers: true,
+            changeInfo: true,
+            deleteMessages: true,
+            editMessages: true,
+            inviteUsers: true,
+            manageCall: true,
+            manageTopics: true,
+            pinMessages: true,
+            postMessages: true,
+          },
+          customTitle: lang('Channel Admin'),
+        });
+      }
+    }
+  });
+
+  useTimeout(() => {
+    setIsMounted(true);
+  }, MOUNT_ANIMATION_DURATION);
 
   useEffect(() => {
     lastMessageSendTimeSeconds.current = undefined;
@@ -1485,6 +1523,7 @@ const Composer: FC<OwnProps & StateProps> = ({
             onPollCreate={openPollModal}
             isScheduled={shouldSchedule}
             attachBots={attachBots}
+            isChatWithBot={isChatWithBot || isChatWithSelf}
             peerType={attachMenuPeerType}
             theme={theme}
           />
