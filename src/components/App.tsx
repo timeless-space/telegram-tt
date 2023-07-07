@@ -31,7 +31,7 @@ import UiLoader from './common/UiLoader';
 import styles from './App.module.scss';
 import { setupBeforeInstallPrompt } from '../util/installPrompt';
 import { mobileSubscribe, mobileUnsubscribe } from '../util/notifications';
-import { changePaddingTopMobile } from '../util/tlCustomFunction';
+import { changePaddingTopMobile, handleSendMessage } from '../util/tlCustomFunction';
 
 type StateProps = {
   authState: GlobalState['authState'];
@@ -198,9 +198,13 @@ const App: FC<StateProps> = ({
   }
 
   useLayoutEffect(() => {
+    /**
+     * TL - Set window properties for easier call function from native App
+     */
     const { signOut } = getActions();
     (window as any).signOutGlobal = signOut;
     (window as any).changePaddingTopMobileGlobal = changePaddingTopMobile;
+    (window as any).handleSendMessageGlobal = handleSendMessage;
     document.body.classList.add(styles.bg);
     (window as any).mobileSubscribeGlobal = mobileSubscribe;
     (window as any).mobileUnsubscribeGlobal = mobileUnsubscribe;
