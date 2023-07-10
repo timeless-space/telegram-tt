@@ -27,6 +27,7 @@ import AttachBotItem from './AttachBotItem';
 
 import './AttachMenu.scss';
 import { getActions } from '../../../global';
+import { useLastCallback } from '../../../hooks/useLastCallback';
 
 export type OwnProps = {
   chatId: string;
