@@ -10,7 +10,6 @@ import NewChatStep1 from './NewChatStep1';
 import NewChatStep2 from './NewChatStep2';
 
 import './NewChat.scss';
-import { BOT_ID } from '../../../config';
 
 export type OwnProps = {
   isActive: boolean;
@@ -29,10 +28,7 @@ const NewChat: FC<OwnProps> = ({
   onContentChange,
   onReset,
 }) => {
-  /**
-   * TL - Add Bot always is in the group whenever user create the new one.
-   */
-  const [newChatMemberIds, setNewChatMemberIds] = useState<string[]>([BOT_ID]);
+  const [newChatMemberIds, setNewChatMemberIds] = useState<string[]>([]);
 
   const handleNextStep = useCallback(() => {
     onContentChange(isChannel ? LeftColumnContent.NewChannelStep2 : LeftColumnContent.NewGroupStep2);

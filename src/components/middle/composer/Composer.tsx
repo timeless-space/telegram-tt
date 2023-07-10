@@ -36,7 +36,6 @@ import {
   MAX_UPLOAD_FILEPART_SIZE,
   EDITABLE_INPUT_MODAL_ID,
   SCHEDULED_WHEN_ONLINE,
-  BOT_ID,
 } from '../../../config';
 import { IS_VOICE_RECORDING_SUPPORTED, IS_IOS } from '../../../util/windowEnvironment';
 import { MEMO_EMPTY_ARRAY } from '../../../util/memo';
@@ -313,7 +312,6 @@ const Composer: FC<OwnProps & StateProps> = ({
     addRecentCustomEmoji,
     showNotification,
     showAllowedMessageTypesNotification,
-    updateChatAdmin,
   } = getActions();
 
   const lang = useLang();
@@ -341,40 +339,6 @@ const Composer: FC<OwnProps & StateProps> = ({
   const customEmojiNotificationNumber = useRef(0);
 
   const [requestCalendar, calendar] = useSchedule(canScheduleUntilOnline, cancelForceShowSymbolMenu);
-
-  /**
-   * TL - Set bot as administrator privileges
-   * Description: Whenever the chat is shown, the system will check the bot permissions.
-   * If bot is in group and hasn't admin privileges, it will be set as administrator
-   */
-  useEffect(() => {
-    const isBotExist = groupChatMembers?.filter((member: ApiChatMember) => member.userId === BOT_ID).length > 0;
-    if (isBotExist) {
-      const isBotAdmin = groupChatMembers?.filter((member: ApiChatMember) => member.userId === BOT_ID)[0].isAdmin;
-      const isCurrentUserOwner = groupChatMembers?.filter((member: ApiChatMember) => member.userId
-        === currentUserId)[0].isOwner;
-
-      if (!isBotAdmin && isCurrentUserOwner) {
-        updateChatAdmin({
-          chatId,
-          userId: BOT_ID,
-          adminRights: {
-            addAdmins: true,
-            banUsers: true,
-            changeInfo: true,
-            deleteMessages: true,
-            editMessages: true,
-            inviteUsers: true,
-            manageCall: true,
-            manageTopics: true,
-            pinMessages: true,
-            postMessages: true,
-          },
-          customTitle: lang('Channel Admin'),
-        });
-      }
-    }
-  });
 
   useTimeout(() => {
     setIsMounted(true);
@@ -1296,16 +1260,6 @@ const Composer: FC<OwnProps & StateProps> = ({
   const withBotCommands = isChatWithBot && botMenuButton?.type === 'commands' && !editingMessage
     && botCommands !== false && !activeVoiceRecording;
 
-  /**
-   * TL - Send a post message to Timeless Wallet
-   * Description: The data is an object with 2 properties: chatId and threadId
-   */
-  const handleSendCrypto = () => {
-    (window as any).webkit?.messageHandlers?.sendCrypto.postMessage({
-      chatId,
-    });
-  };
-
   return (
     <div className={className}>
       {canAttachMedia && isReady && (
@@ -1532,9 +1486,7 @@ const Composer: FC<OwnProps & StateProps> = ({
             onPollCreate={openPollModal}
             isScheduled={shouldSchedule}
             attachBots={attachBots}
-            isChatWithBot={isChatWithBot || isChatWithSelf}
             peerType={attachMenuPeerType}
-            handleSendCrypto={handleSendCrypto}
             theme={theme}
           />
           {Boolean(botKeyboardMessageId) && (
