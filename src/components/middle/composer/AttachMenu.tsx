@@ -26,8 +26,6 @@ import MenuItem from '../../ui/MenuItem';
 import AttachBotItem from './AttachBotItem';
 
 import './AttachMenu.scss';
-import { getActions } from '../../../global';
-import { useLastCallback } from '../../../hooks/useLastCallback';
 
 export type OwnProps = {
   chatId: string;
@@ -68,8 +66,6 @@ const AttachMenu: FC<OwnProps> = ({
   handleSendCrypto,
   theme,
 }) => {
-  const { acceptInviteConfirmation } = getActions();
-
   const [isAttachMenuOpen, openAttachMenu, closeAttachMenu] = useFlag();
   const [handleMouseEnter, handleMouseLeave, markMouseInside] = useMouseInside(isAttachMenuOpen, closeAttachMenu);
 
@@ -115,13 +111,6 @@ const AttachMenu: FC<OwnProps> = ({
         '*'
       ), (e) => handleFileSelect(e, false));
   }, [canSendAudios, canSendDocuments, handleFileSelect]);
-
-  /**
-   * TL - This function is used to test invite user by hash code. It will remove soon
-   */
-  const handleInviteUser = useLastCallback(() => {
-    acceptInviteConfirmation({ hash: 'LUcU2hRUVXQ3NDJl' });
-  });
 
   const bots = useMemo(() => {
     return Object.values(attachBots).filter((bot) => {
@@ -211,12 +200,6 @@ const AttachMenu: FC<OwnProps> = ({
             {lang('Send Crypto')}
           </MenuItem>
         )}
-        <MenuItem
-          icon="lock"
-          onClick={handleInviteUser}
-        >
-          {lang('Test Open Invite')}
-        </MenuItem>
 
         {canAttachMedia && !isScheduled && bots.map((bot) => (
           <AttachBotItem
