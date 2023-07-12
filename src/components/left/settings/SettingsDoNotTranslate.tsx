@@ -137,7 +137,7 @@ const SettingsDoNotTranslate: FC<OwnProps & StateProps> = ({
   });
 
   return (
-    <div className={buildClassName(styles.root, 'settings-content custom-scroll')}>
+    <div className={buildClassName(styles.root, 'settings-content no-scrollbar')}>
       <div className={buildClassName(styles.item, 'settings-item')}>
         <InputText
           key="search"
@@ -146,7 +146,7 @@ const SettingsDoNotTranslate: FC<OwnProps & StateProps> = ({
           placeholder={lang('Search')}
           teactExperimentControlled
         />
-        <div className={buildClassName(styles.languages, 'radio-group custom-scroll')}>
+        <div className={buildClassName(styles.languages, 'radio-group no-scrollbar')}>
           {filteredDisplayedOptions.map((option) => (
             <Checkbox
               className={styles.checkbox}

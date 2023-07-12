@@ -117,7 +117,7 @@ const MediaResults: FC<OwnProps & StateProps> = ({
   const isMessageList = canRenderContents && foundIds && foundIds.length > 0 && searchQuery;
 
   const classNames = buildClassName(
-    'search-content custom-scroll',
+    'search-content no-scrollbar',
     isMessageList && 'chat-list',
   );
 

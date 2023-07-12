@@ -71,7 +71,7 @@ const GifButton: FC<OwnProps> = ({
   } = useContextMenuHandlers(ref);
 
   const getTriggerElement = useLastCallback(() => ref.current);
-  const getRootElement = useLastCallback(() => ref.current!.closest('.custom-scroll, .no-scrollbar'));
+  const getRootElement = useLastCallback(() => ref.current!.closest('.no-scrollbar, .custom-scroll'));
   const getMenuElement = useLastCallback(() => ref.current!.querySelector('.gif-context-menu .bubble'));
 
   const {

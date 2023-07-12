@@ -112,7 +112,7 @@ const ListItem: FC<OwnProps> = ({
   } = useContextMenuHandlers(containerRef, !contextActions);
 
   const getTriggerElement = useLastCallback(() => containerRef.current);
-  const getRootElement = useLastCallback(() => containerRef.current!.closest('.custom-scroll'));
+  const getRootElement = useLastCallback(() => containerRef.current!.closest('.no-scrollbar'));
   const getMenuElement = useLastCallback(() => {
     return (withPortalForMenu ? document.querySelector('#portals') : containerRef.current)!
       .querySelector('.ListItem-context-menu .bubble');

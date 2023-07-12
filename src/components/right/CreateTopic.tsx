@@ -106,7 +106,7 @@ const CreateTopic: FC<OwnProps & StateProps> = ({
 
   return (
     <div className={styles.root}>
-      <div className={buildClassName(styles.content, 'custom-scroll')}>
+      <div className={buildClassName(styles.content, 'no-scrollbar')}>
         <div className={buildClassName(styles.section, styles.top)}>
           <span className={styles.heading}>{lang('CreateTopicTitle')}</span>
           <Transition

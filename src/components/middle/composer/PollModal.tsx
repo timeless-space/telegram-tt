@@ -302,7 +302,7 @@ const PollModal: FC<OwnProps> = ({
       />
       <div className="options-divider" />
 
-      <div className="options-list custom-scroll" ref={optionsListRef}>
+      <div className="options-list no-scrollbar" ref={optionsListRef}>
         <h3 className="options-header">{lang('PollOptions')}</h3>
 
         {hasErrors && renderQuizNoOptionError()}

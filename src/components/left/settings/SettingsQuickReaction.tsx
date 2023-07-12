@@ -52,7 +52,7 @@ const SettingsQuickReaction: FC<OwnProps & StateProps> = ({
   }, [setDefaultReaction]);
 
   return (
-    <div className="settings-content settings-item custom-scroll settings-quick-reaction">
+    <div className="settings-content settings-item no-scrollbar settings-quick-reaction">
       <RadioGroup
         name="quick-reaction-settings"
         options={options}

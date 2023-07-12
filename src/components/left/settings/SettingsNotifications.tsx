@@ -146,7 +146,7 @@ const SettingsNotifications: FC<OwnProps & StateProps> = ({
   });
 
   return (
-    <div className="settings-content custom-scroll">
+    <div className="settings-content no-scrollbar">
       <div className="settings-item">
         <h4 className="settings-item-header" dir={lang.isRtl ? 'rtl' : undefined}>
           Web notifications

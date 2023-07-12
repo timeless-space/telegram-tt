@@ -53,7 +53,7 @@ const PollResults: FC<OwnProps & StateProps> = ({
   return (
     <div className="PollResults" dir={lang.isRtl ? 'rtl' : undefined}>
       <h3 className="poll-question" dir="auto">{renderText(summary.question, ['emoji', 'br'])}</h3>
-      <div className="poll-results-list custom-scroll">
+      <div className="poll-results-list no-scrollbar">
         {Boolean(lastSyncTime) && summary.answers.map((answer) => (
           <PollAnswerResults
             key={`${message.id}-${answer.option}`}

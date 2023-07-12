@@ -167,7 +167,7 @@ const NewChatStep2: FC<OwnProps & StateProps > = ({
           <>
             <h3 className="chat-members-heading">{lang('GroupInfo.ParticipantCount', memberIds.length, 'i')}</h3>
 
-            <div className="chat-members-list custom-scroll">
+            <div className="chat-members-list no-scrollbar">
               {memberIds.map((id) => (
                 <ListItem inactive className="chat-item-clickable">
                   <PrivateChatInfo userId={id} />

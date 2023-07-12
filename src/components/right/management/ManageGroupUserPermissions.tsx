@@ -138,7 +138,7 @@ const ManageGroupUserPermissions: FC<OwnProps & StateProps> = ({
       style={`--shift-height: ${ITEMS_COUNT * ITEM_HEIGHT - SHIFT_HEIGHT_MINUS}px;`
            + `--before-shift-height: ${BEFORE_ITEMS_COUNT * ITEM_HEIGHT + BEFORE_USER_INFO_HEIGHT}px;`}
     >
-      <div className="custom-scroll">
+      <div className="no-scrollbar">
         <div className="section without-bottom-shadow">
           <ListItem inactive className="chat-item-clickable">
             <PrivateChatInfo userId={selectedChatMember.userId} forceShowSelf />

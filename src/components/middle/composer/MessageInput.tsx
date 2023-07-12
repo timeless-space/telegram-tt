@@ -529,7 +529,7 @@ const MessageInput: FC<OwnProps & StateProps> = ({
   return (
     <div id={id} onClick={shouldSuppressFocus ? onSuppressedFocus : undefined} dir={lang.isRtl ? 'rtl' : undefined}>
       <div
-        className={buildClassName('custom-scroll', SCROLLER_CLASS)}
+        className={buildClassName('no-scrollbar', SCROLLER_CLASS)}
         onScroll={onScroll}
         onClick={!isAttachmentModalInput && !canSendPlainText ? handleClick : undefined}
       >
@@ -568,7 +568,7 @@ const MessageInput: FC<OwnProps & StateProps> = ({
           <div ref={absoluteContainerRef} className="absolute-video-container" />
         </div>
       </div>
-      <div ref={scrollerCloneRef} className={buildClassName('custom-scroll', SCROLLER_CLASS, 'clone')}>
+      <div ref={scrollerCloneRef} className={buildClassName('no-scrollbar', SCROLLER_CLASS, 'clone')}>
         <div className="input-scroller-content">
           <div ref={cloneRef} className={buildClassName(className, 'clone')} dir="auto" />
         </div>

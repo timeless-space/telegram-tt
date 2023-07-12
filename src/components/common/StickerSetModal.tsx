@@ -217,7 +217,7 @@ const StickerSetModal: FC<OwnProps & StateProps> = ({
     >
       {renderingStickerSet?.stickers ? (
         <>
-          <div ref={containerRef} className="stickers custom-scroll" onScroll={handleContentScroll}>
+          <div ref={containerRef} className="stickers no-scrollbar" onScroll={handleContentScroll}>
             <div className="shared-canvas-container stickers-grid">
               <canvas ref={sharedCanvasRef} className="shared-canvas" />
               {renderingStickerSet.stickers.map((sticker) => (

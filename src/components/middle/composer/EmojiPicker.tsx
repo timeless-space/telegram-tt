@@ -13,7 +13,6 @@ import type {
 
 import { MENU_TRANSITION_DURATION, RECENT_SYMBOL_SET_ID } from '../../../config';
 import { REM } from '../../common/helpers/mediaDimensions';
-import { IS_TOUCH_ENV } from '../../../util/windowEnvironment';
 import { MEMO_EMPTY_ARRAY } from '../../../util/memo';
 import { uncompressEmoji } from '../../../util/emoji';
 import animateScroll from '../../../util/animateScroll';
@@ -225,7 +224,7 @@ const EmojiPicker: FC<OwnProps & StateProps> = ({
       <div
         ref={containerRef}
         onScroll={handleContentScroll}
-        className={buildClassName('EmojiPicker-main no-selection', IS_TOUCH_ENV ? 'no-scrollbar' : 'custom-scroll')}
+        className={buildClassName('EmojiPicker-main no-selection', 'no-scrollbar')}
       >
         {allCategories.map((category, i) => (
           <EmojiCategory

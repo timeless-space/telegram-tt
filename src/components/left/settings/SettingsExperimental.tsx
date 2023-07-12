@@ -35,7 +35,7 @@ const SettingsExperimental: FC<OwnProps & StateProps> = ({
   });
 
   return (
-    <div className="settings-content custom-scroll">
+    <div className="settings-content no-scrollbar">
       <div className="settings-content-header no-border">
         <AnimatedIcon
           tgsUrl={LOCAL_TGS_URLS.Experimental}

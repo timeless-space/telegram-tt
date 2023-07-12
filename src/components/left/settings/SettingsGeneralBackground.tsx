@@ -120,7 +120,7 @@ const SettingsGeneralBackground: FC<OwnProps & StateProps> = ({
   const isUploading = loadedWallpapers?.[0] && loadedWallpapers[0].slug === UPLOADING_WALLPAPER_SLUG;
 
   return (
-    <div className="SettingsGeneralBackground settings-content custom-scroll">
+    <div className="SettingsGeneralBackground settings-content no-scrollbar">
       <div className="settings-item pt-3">
         <ListItem
           icon="camera-add"

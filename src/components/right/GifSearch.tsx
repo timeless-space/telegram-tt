@@ -145,7 +145,7 @@ const GifSearch: FC<OwnProps & StateProps> = ({
     <div className="GifSearch" dir={lang.isRtl ? 'rtl' : undefined}>
       <InfiniteScroll
         ref={containerRef}
-        className={buildClassName('gif-container custom-scroll', hasResults && 'grid')}
+        className={buildClassName('gif-container no-scrollbar', hasResults && 'grid')}
         items={results}
         itemSelector=".GifButton"
         preloadBackwards={PRELOAD_BACKWARDS}

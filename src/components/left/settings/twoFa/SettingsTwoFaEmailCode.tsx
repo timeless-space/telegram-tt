@@ -80,7 +80,7 @@ const SettingsTwoFaEmailCode: FC<OwnProps & StateProps> = ({
   }, [clearError, codeLength, error, onSubmit]);
 
   return (
-    <div className="settings-content two-fa custom-scroll">
+    <div className="settings-content two-fa no-scrollbar">
       <div className="settings-content-header no-border">
         <AnimatedIconFromSticker sticker={animatedEmoji} size={ICON_SIZE} className="settings-content-icon" />
       </div>

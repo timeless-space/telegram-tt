@@ -182,7 +182,7 @@ const ManageGroupPermissions: FC<OwnProps & StateProps> = ({
       style={`--shift-height: ${ITEMS_COUNT * ITEM_HEIGHT}px;`
         + `--before-shift-height: ${BEFORE_ITEMS_COUNT * ITEM_HEIGHT}px;`}
     >
-      <div className="custom-scroll">
+      <div className="no-scrollbar">
         <div className="section without-bottom-shadow">
           <h3 className="section-heading" dir="auto">{lang('ChannelPermissionsHeader')}</h3>
 

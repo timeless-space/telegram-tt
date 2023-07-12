@@ -56,7 +56,7 @@ const ChatlistAlready: FC<OwnProps> = ({ invite, folder }) => {
       <div className={styles.description}>
         {renderText(descriptionText, ['simple_markdown', 'emoji'])}
       </div>
-      <div className={buildClassName(styles.pickerWrapper, 'custom-scroll')}>
+      <div className={buildClassName(styles.pickerWrapper, 'no-scrollbar')}>
         {Boolean(invite.missingPeerIds.length) && (
           <>
             <div className={styles.pickerHeader}>

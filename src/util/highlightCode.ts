@@ -119,7 +119,7 @@ function treeToElements(tree: Element | Root): TeactNode {
   }).filter(Boolean);
 
   if (tree.type === 'root') {
-    return Teact.createElement('code', { className: 'hljs custom-scroll-x' }, children) as unknown as TeactNode;
+    return Teact.createElement('code', { className: 'hljs no-scrollbar' }, children) as unknown as TeactNode;
   }
 
   const name = tree.tagName;

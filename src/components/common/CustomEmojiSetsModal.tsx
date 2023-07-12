@@ -58,7 +58,7 @@ const CustomEmojiSetsModal: FC<OwnProps & StateProps> = ({
       hasCloseButton
       title={lang('lng_custom_emoji_used_sets')}
     >
-      <div className={buildClassName(styles.sets, 'custom-scroll')} ref={customEmojiModalRef} teactFastList>
+      <div className={buildClassName(styles.sets, 'no-scrollbar')} ref={customEmojiModalRef} teactFastList>
         {renderingCustomEmojiSets?.map((customEmojiSet) => (
           <StickerSetCard
             key={customEmojiSet.id}

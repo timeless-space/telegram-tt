@@ -94,7 +94,7 @@ const SettingsStickers: FC<OwnProps & StateProps> = ({
   });
 
   return (
-    <div className="settings-content custom-scroll">
+    <div className="settings-content no-scrollbar">
       <div className="settings-item">
         <Checkbox
           label={lang('SuggestStickers')}

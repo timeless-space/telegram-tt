@@ -112,7 +112,7 @@ const GiftPremiumModal: FC<OwnProps & StateProps> = ({
       isOpen={isOpen}
       className={styles.modalDialog}
     >
-      <div className="custom-scroll">
+      <div className="no-scrollbar">
         <Button
           round
           size="smaller"

@@ -7,7 +7,6 @@ import { getActions, withGlobal } from '../../../global';
 import type { ApiVideo } from '../../../api/types';
 
 import { SLIDE_TRANSITION_DURATION } from '../../../config';
-import { IS_TOUCH_ENV } from '../../../util/windowEnvironment';
 import buildClassName from '../../../util/buildClassName';
 import { selectCurrentMessageList, selectIsChatWithSelf } from '../../../global/selectors';
 
@@ -67,7 +66,7 @@ const GifPicker: FC<OwnProps & StateProps> = ({
     <div>
       <div
         ref={containerRef}
-        className={buildClassName('GifPicker', className, IS_TOUCH_ENV ? 'no-scrollbar' : 'custom-scroll')}
+        className={buildClassName('GifPicker', className, 'no-scrollbar')}
       >
         {!canSendGifs ? (
           <div className="picker-disabled">Sending GIFs is not allowed in this chat.</div>

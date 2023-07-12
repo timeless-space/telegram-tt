@@ -115,7 +115,7 @@ const AudioResults: FC<OwnProps & StateProps> = ({
   return (
     <div className="LeftSearch">
       <InfiniteScroll
-        className="search-content documents-list custom-scroll"
+        className="search-content documents-list no-scrollbar"
         items={foundMessages}
         onLoadMore={handleLoadMore}
         noFastList

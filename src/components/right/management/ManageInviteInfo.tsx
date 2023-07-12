@@ -135,7 +135,7 @@ const ManageInviteInfo: FC<OwnProps & StateProps> = ({
 
   return (
     <div className="Management ManageInviteInfo">
-      <div className="custom-scroll">
+      <div className="no-scrollbar">
         {!invite && (
           <p className="text-muted">{lang('Loading')}</p>
         )}

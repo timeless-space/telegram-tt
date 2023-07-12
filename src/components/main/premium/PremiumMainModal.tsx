@@ -238,7 +238,7 @@ const PremiumMainModal: FC<OwnProps & StateProps> = ({
     >
       <Transition name="slide" activeKey={currentSection ? 1 : 0} className={styles.transition}>
         {!currentSection ? (
-          <div className={buildClassName(styles.main, 'custom-scroll')} onScroll={handleScroll}>
+          <div className={buildClassName(styles.main, 'no-scrollbar')} onScroll={handleScroll}>
             <Button
               round
               size="smaller"

@@ -293,7 +293,7 @@ const GroupCall: FC<OwnProps & StateProps> = ({
       )}
 
       <div className={styles.panelWrapper} ref={panelRef}>
-        <div className={buildClassName(styles.panel, 'custom-scroll')}>
+        <div className={buildClassName(styles.panel, 'no-scrollbar')}>
           <div className={styles.panelScrollTrigger} ref={panelScrollTriggerRef} />
 
           <div className={buildClassName(styles.panelHeader, hasScrolled && styles.scrolled)}>

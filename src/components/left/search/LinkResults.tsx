@@ -116,7 +116,7 @@ const LinkResults: FC<OwnProps & StateProps> = ({
   return (
     <div ref={containerRef} className="LeftSearch">
       <InfiniteScroll
-        className="search-content documents-list custom-scroll"
+        className="search-content documents-list no-scrollbar"
         items={foundMessages}
         onLoadMore={handleLoadMore}
         noFastList

@@ -72,7 +72,7 @@ const RecentContacts: FC<OwnProps & StateProps> = ({
   const lang = useLang();
 
   return (
-    <div className="RecentContacts custom-scroll">
+    <div className="RecentContacts no-scrollbar">
       {topUserIds && (
         <div className="top-peers-section" dir={lang.isRtl ? 'rtl' : undefined}>
           <div ref={topUsersRef} className="top-peers no-selection">

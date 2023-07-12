@@ -191,7 +191,7 @@ const ManageGroupMembers: FC<OwnProps & StateProps> = ({
   return (
     <div className="Management">
       {noAdmins && renderSearchField()}
-      <div className="custom-scroll">
+      <div className="no-scrollbar">
         {canHideParticipants && (
           <div className="section">
             <ListItem icon="group" ripple onClick={handleToggleParticipantsHidden}>
@@ -206,7 +206,7 @@ const ManageGroupMembers: FC<OwnProps & StateProps> = ({
         <div className="section">
           {viewportIds?.length ? (
             <InfiniteScroll
-              className="picker-list custom-scroll"
+              className="picker-list no-scrollbar"
               items={displayedIds}
               onLoadMore={getMore}
               noScrollRestore={Boolean(searchQuery)}

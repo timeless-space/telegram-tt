@@ -99,7 +99,7 @@ const ReceiptModal: FC<OwnProps & StateProps> = ({
           </Button>
           <h3> {lang('PaymentReceipt')} </h3>
         </div>
-        <div className="receipt-content custom-scroll">
+        <div className="receipt-content no-scrollbar">
           <Checkout
             prices={prices}
             shippingPrices={shippingPrices}

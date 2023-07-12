@@ -145,7 +145,7 @@ const AuthCode: FC<StateProps> = ({
   const isAuthReady = authState === 'authorizationStateWaitQrCode';
 
   return (
-    <div id="auth-qr-form" className="custom-scroll">
+    <div id="auth-qr-form" className="no-scrollbar">
       <div className="auth-form qr">
         <div className="qr-outer">
           <div

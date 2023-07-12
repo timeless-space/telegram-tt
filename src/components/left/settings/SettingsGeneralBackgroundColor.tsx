@@ -201,7 +201,7 @@ const SettingsGeneralBackground: FC<OwnProps & StateProps> = ({
   }, []);
 
   const className = buildClassName(
-    'SettingsGeneralBackgroundColor settings-content custom-scroll',
+    'SettingsGeneralBackgroundColor settings-content no-scrollbar',
     isDragging && 'is-dragging',
   );
 

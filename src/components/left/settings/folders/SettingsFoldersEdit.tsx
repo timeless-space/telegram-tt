@@ -264,7 +264,7 @@ const SettingsFoldersEdit: FC<OwnProps & StateProps> = ({
 
   return (
     <div className="settings-fab-wrapper">
-      <div className="settings-content no-border custom-scroll">
+      <div className="settings-content no-border no-scrollbar">
         <div className="settings-content-header">
           <AnimatedIcon
             size={STICKER_SIZE_FOLDER_SETTINGS}

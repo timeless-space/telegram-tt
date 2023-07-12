@@ -17,7 +17,6 @@ import {
   STICKER_SIZE_PICKER_HEADER,
 } from '../../../config';
 import { REM } from '../../common/helpers/mediaDimensions';
-import { IS_TOUCH_ENV } from '../../../util/windowEnvironment';
 import { MEMO_EMPTY_ARRAY } from '../../../util/memo';
 import { isUserId } from '../../../global/helpers';
 import buildClassName from '../../../util/buildClassName';
@@ -348,7 +347,7 @@ const StickerPicker: FC<OwnProps & StateProps> = ({
         ref={containerRef}
         onMouseMove={handleMouseMove}
         onScroll={handleContentScroll}
-        className={buildClassName(styles.main, 'no-selection', IS_TOUCH_ENV ? 'no-scrollbar' : 'custom-scroll')}
+        className={buildClassName(styles.main, 'no-selection', 'no-scrollbar')}
       >
         {allSets.map((stickerSet, i) => (
           <StickerSet

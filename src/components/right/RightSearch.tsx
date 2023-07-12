@@ -163,7 +163,7 @@ const RightSearch: FC<OwnProps & StateProps> = ({
   return (
     <InfiniteScroll
       ref={containerRef}
-      className="RightSearch custom-scroll"
+      className="RightSearch no-scrollbar"
       items={viewportResults}
       preloadBackwards={0}
       onLoadMore={getMore}

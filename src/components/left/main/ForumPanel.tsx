@@ -257,7 +257,7 @@ const ForumPanel: FC<OwnProps & StateProps> = ({
       <div className={styles.notch} />
 
       <InfiniteScroll
-        className="chat-list custom-scroll"
+        className="chat-list no-scrollbar"
         ref={containerRef}
         items={viewportIds}
         preloadBackwards={TOPICS_SLICE}

@@ -227,7 +227,7 @@ const PremiumFeatureModal: FC<OwnProps> = ({
                 <h2 className={buildClassName(styles.header, isScrolledToTop && styles.noHeaderBorder)}>
                   {lang(PREMIUM_FEATURE_TITLES.double_limits)}
                 </h2>
-                <div className={buildClassName(styles.limitsContent, 'custom-scroll')} onScroll={handleLimitsScroll}>
+                <div className={buildClassName(styles.limitsContent, 'no-scrollbar')} onScroll={handleLimitsScroll}>
                   {LIMITS_ORDER.map((limit, i) => {
                     const defaultLimit = limits?.[limit][0].toString();
                     const premiumLimit = limits?.[limit][1].toString();

@@ -127,7 +127,7 @@ export const MESSAGE_LIST_SENSITIVE_AREA = 750;
 export const SCROLLBAR_WIDTH = (() => {
   const el = document.createElement('div');
   el.style.cssText = 'overflow:scroll; visibility:hidden; position:absolute;';
-  el.classList.add('custom-scroll');
+  el.classList.add('no-scrollbar');
   document.body.appendChild(el);
   const width = el.offsetWidth - el.clientWidth;
   el.remove();

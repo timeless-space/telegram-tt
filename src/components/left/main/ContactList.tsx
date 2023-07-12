@@ -74,7 +74,7 @@ const ContactList: FC<OwnProps & StateProps> = ({
       preloadBackwards={PRELOAD_CONTACT}
       noScrollRestoreOnTop
       noScrollRestore
-      className="chat-list custom-scroll"
+      className="chat-list no-scrollbar"
     >
       {viewportIds?.length ? (
         viewportIds.map((id) => (

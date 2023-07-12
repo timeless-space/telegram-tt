@@ -7,7 +7,6 @@ import type {
 } from '../../../api/types';
 import { LoadMoreDirection } from '../../../types';
 
-import { IS_TOUCH_ENV } from '../../../util/windowEnvironment';
 import setTooltipItemVisible from '../../../util/setTooltipItemVisible';
 import buildClassName from '../../../util/buildClassName';
 import { extractCurrentThemeParams } from '../../../util/themeStyle';
@@ -129,8 +128,7 @@ const InlineBotTooltip: FC<OwnProps> = ({
   }
 
   const className = buildClassName(
-    'InlineBotTooltip composer-tooltip',
-    IS_TOUCH_ENV ? 'no-scrollbar' : 'custom-scroll',
+    'InlineBotTooltip composer-tooltip no-scrollbar',
     renderedIsGallery && 'gallery',
     transitionClassNames,
   );

@@ -101,7 +101,7 @@ const SettingsLanguage: FC<OwnProps & StateProps> = ({
   });
 
   return (
-    <div className="settings-content settings-language custom-scroll">
+    <div className="settings-content settings-language no-scrollbar">
       {IS_TRANSLATION_SUPPORTED && (
         <div className="settings-item">
           <Checkbox

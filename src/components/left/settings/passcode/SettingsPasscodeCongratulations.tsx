@@ -26,7 +26,7 @@ const SettingsPasscodeCongratulations: FC<OwnProps> = ({
   useHistoryBack({ isActive, onBack: onReset });
 
   return (
-    <div className="settings-content local-passcode custom-scroll">
+    <div className="settings-content local-passcode no-scrollbar">
       <div className="settings-content-header no-border">
         <AnimatedIcon
           size={STICKER_SIZE_PASSCODE}
