@@ -2,6 +2,9 @@
 
 import type { ApiLangPack } from '../api/types';
 
+/**
+ * TL - Add some language constants support.
+ */
 export const fallbackLangPackInitial = {
   WrongNumber: {
     key: 'WrongNumber',

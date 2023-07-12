@@ -187,6 +187,9 @@ export const INITIAL_GLOBAL_STATE: GlobalState = {
     orderedHashes: [],
   },
 
+  /**
+   * TL: Set default theme to dark, not use system default
+   */
   settings: {
     byKey: {
       theme: 'dark',

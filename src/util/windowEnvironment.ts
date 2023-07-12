@@ -81,6 +81,7 @@ export const IS_CANVAS_FILTER_SUPPORTED = (
 export const IS_REQUEST_FULLSCREEN_SUPPORTED = 'requestFullscreen' in document.createElement('div');
 export const ARE_CALLS_SUPPORTED = !navigator.userAgent.includes('Firefox');
 export const LAYERS_ANIMATION_NAME = IS_ANDROID ? 'slideFade' : IS_IOS ? 'slideLayers' : 'pushSlide';
+export const IS_VIDEO_PREVIEW_SUPPORTED = !IS_TEST;
 
 const TEST_VIDEO = document.createElement('video');
 // `canPlayType(VIDEO_MOV_TYPE)` returns false negative at least for macOS Chrome and iOS Safari
@@ -119,9 +120,22 @@ export const IS_BACKDROP_BLUR_SUPPORTED = CSS.supports('backdrop-filter: blur()'
 export const IS_INSTALL_PROMPT_SUPPORTED = 'onbeforeinstallprompt' in window;
 export const IS_MULTITAB_SUPPORTED = 'BroadcastChannel' in window;
 export const IS_OPEN_IN_NEW_TAB_SUPPORTED = IS_MULTITAB_SUPPORTED && !(IS_PWA && IS_MOBILE);
-export const IS_TRANSLATION_SUPPORTED = Boolean(Intl.DisplayNames);
+export const IS_TRANSLATION_SUPPORTED = !IS_TEST && Boolean(Intl.DisplayNames);
 
 export const MESSAGE_LIST_SENSITIVE_AREA = 750;
+
+export const SCROLLBAR_WIDTH = (() => {
+  const el = document.createElement('div');
+  el.style.cssText = 'overflow:scroll; visibility:hidden; position:absolute;';
+  el.classList.add('custom-scroll');
+  document.body.appendChild(el);
+  const width = el.offsetWidth - el.clientWidth;
+  el.remove();
+
+  document.documentElement.style.setProperty('--scrollbar-width', `${width}px`);
+
+  return width;
+})();
 
 export const MAX_BUFFER_SIZE = (IS_MOBILE ? 512 : 2000) * 1024 ** 2; // 512 OR 2000 MB
 

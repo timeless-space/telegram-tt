@@ -1,6 +1,6 @@
 import type { FC } from '../../../lib/teact/teact';
 import React, {
-  memo, useCallback, useEffect, useMemo, useRef,
+  memo, useEffect, useMemo, useRef,
 } from '../../../lib/teact/teact';
 import { getActions, withGlobal } from '../../../global';
 
@@ -9,15 +9,28 @@ import type { AnimationLevel, ISettings } from '../../../types';
 import { LeftColumnContent, SettingsScreens } from '../../../types';
 
 import {
+  // ANIMATION_LEVEL_MAX,
+  // ANIMATION_LEVEL_MIN,
   APP_NAME,
   ARCHIVED_FOLDER_ID,
+  // BETA_CHANGELOG_URL,
   DEBUG,
+  // FEEDBACK_URL,
   IS_BETA,
+  // IS_TEST,
   IS_ELECTRON,
+  // PRODUCTION_HOSTNAME,
 } from '../../../config';
 import { IS_APP } from '../../../util/windowEnvironment';
+// import {
+//   INITIAL_PERFORMANCE_STATE_MAX,
+//   INITIAL_PERFORMANCE_STATE_MID,
+//   INITIAL_PERFORMANCE_STATE_MIN,
+// } from '../../../global/initialState';
 import buildClassName from '../../../util/buildClassName';
 import { formatDateToString } from '../../../util/dateFormat';
+// import { setPermanentWebVersion } from '../../../util/permanentWebVersion';
+// import { clearWebsync } from '../../../util/websync';
 import {
   selectCanSetPasscode,
   selectCurrentMessageList, selectIsCurrentUserPremium, selectTabState, selectTheme,
@@ -25,7 +38,9 @@ import {
 import useLang from '../../../hooks/useLang';
 import useConnectionStatus from '../../../hooks/useConnectionStatus';
 import { useHotkeys } from '../../../hooks/useHotkeys';
+// import { getPromptInstall } from '../../../util/installPrompt';
 import captureEscKeyListener from '../../../util/captureEscKeyListener';
+import useLastCallback from '../../../hooks/useLastCallback';
 import useLeftHeaderButtonRtlForumTransition from './hooks/useLeftHeaderButtonRtlForumTransition';
 import { useFullscreenStatus } from '../../../hooks/useFullscreen';
 import useElectronDrag from '../../../hooks/useElectronDrag';
@@ -37,9 +52,11 @@ import MenuItem from '../../ui/MenuItem';
 import Button from '../../ui/Button';
 import SearchInput from '../../ui/SearchInput';
 import PickerSelectedItem from '../../common/PickerSelectedItem';
+// import Switcher from '../../ui/Switcher';
 import ShowTransition from '../../ui/ShowTransition';
 import ConnectionStatusOverlay from '../ConnectionStatusOverlay';
 import StatusButton from './StatusButton';
+// import Toggle from '../../ui/Toggle';
 
 import './LeftMainHeader.scss';
 
@@ -90,11 +107,12 @@ const LeftMainHeader: FC<OwnProps & StateProps> = ({
   searchQuery,
   isLoading,
   isCurrentUserPremium,
-  shouldSkipTransition,
+  // shouldSkipTransition,
   currentUserId,
   globalSearchChatId,
   searchDate,
   theme,
+  // animationLevel,
   connectionState,
   isSyncing,
   isMessageListOpen,
@@ -102,6 +120,7 @@ const LeftMainHeader: FC<OwnProps & StateProps> = ({
   areChatsLoaded,
   hasPasscode,
   canSetPasscode,
+  // canInstall,
   archiveSettings,
 }) => {
   const {
@@ -112,6 +131,9 @@ const LeftMainHeader: FC<OwnProps & StateProps> = ({
     openChatByUsername,
     lockScreen,
     requestNextSettingsScreen,
+    // skipLockOnUnload,
+    // openUrl,
+    // updatePerformanceSettings,
   } = getActions();
 
   const lang = useLang();
@@ -131,7 +153,7 @@ const LeftMainHeader: FC<OwnProps & StateProps> = ({
     lang, connectionState, isSyncing, isMessageListOpen, isConnectionStatusMinimized, !areChatsLoaded,
   );
 
-  const handleLockScreenHotkey = useCallback((e: KeyboardEvent) => {
+  const handleLockScreenHotkey = useLastCallback((e: KeyboardEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (hasPasscode) {
@@ -139,7 +161,7 @@ const LeftMainHeader: FC<OwnProps & StateProps> = ({
     } else {
       requestNextSettingsScreen({ screen: SettingsScreens.PasscodeDisabled });
     }
-  }, [hasPasscode]);
+  });
 
   useHotkeys(canSetPasscode ? {
     'Ctrl+Shift+L': handleLockScreenHotkey,
@@ -163,43 +185,42 @@ const LeftMainHeader: FC<OwnProps & StateProps> = ({
         ariaLabel={hasMenu ? lang('AccDescrOpenMenu2') : 'Return to chat list'}
       >
         <div className={buildClassName(
-          'animated-menu-icon',
-          !hasMenu && 'state-back',
-          shouldSkipTransition && 'no-animation',
+          'animated-menu-icon no-animation state-back',
+          // !hasMenu && 'state-back',
+          // shouldSkipTransition && 'no-animation',
         )}
         />
       </Button>
     );
-  }, [hasMenu, isMobile, lang, onReset, shouldSkipTransition]);
+  }, [hasMenu, isMobile, lang, onReset]);
 
-  const handleSearchFocus = useCallback(() => {
+  const handleSearchFocus = useLastCallback(() => {
     if (!searchQuery) {
       onSearchQuery('');
     }
-  }, [searchQuery, onSearchQuery]);
+  });
 
-  const toggleConnectionStatus = useCallback(() => {
+  const toggleConnectionStatus = useLastCallback(() => {
     setSettingOption({ isConnectionStatusMinimized: !isConnectionStatusMinimized });
-  }, [isConnectionStatusMinimized, setSettingOption]);
+  });
 
-  const handleSelectSaved = useCallback(() => {
+  const handleSelectSaved = useLastCallback(() => {
     openChat({ id: currentUserId, shouldReplaceHistory: true });
-  }, [currentUserId, openChat]);
+  });
 
-  // const handleDarkModeToggle = useCallback((e: React.SyntheticEvent<HTMLElement>) => {
+  // const handleDarkModeToggle = useLastCallback((e: React.SyntheticEvent<HTMLElement>) => {
   //   // No action in here/ default dark mode
   //   e.stopPropagation();
   //   const newTheme = theme === 'light' ? 'dark' : 'light';
   //   setSettingOption({ theme: newTheme });
   //   setSettingOption({ shouldUseSystemTheme: false });
-  // }, [setSettingOption, theme]);
+  // });
 
   useEffect(() => {
     setSettingOption({ theme: 'dark' });
     setSettingOption({ shouldUseSystemTheme: false });
   }, []);
-
-  // const handleAnimationLevelChange = useCallback((e: React.SyntheticEvent<HTMLElement>) => {
+  // const handleAnimationLevelChange = useLastCallback((e: React.SyntheticEvent<HTMLElement>) => {
   //   e.stopPropagation();
 
   //   let newLevel = animationLevel + 1;
@@ -222,19 +243,19 @@ const LeftMainHeader: FC<OwnProps & StateProps> = ({
   //   setPermanentWebVersion('K');
   //   clearWebsync();
   //   skipLockOnUnload();
-  // }, [skipLockOnUnload]);
+  // });
 
-  const handleOpenTipsChat = useCallback(() => {
+  const handleOpenTipsChat = useLastCallback(() => {
     openChatByUsername({ username: lang('Settings.TipsUsername') });
-  }, [lang, openChatByUsername]);
+  });
 
-  // const handleBugReportClick = useCallback(() => {
+  // const handleBugReportClick = useLastCallback(() => {
   //   openUrl({ url: FEEDBACK_URL });
-  // }, [openUrl]);
+  // });
 
-  const handleLockScreen = useCallback(() => {
+  const handleLockScreen = useLastCallback(() => {
     lockScreen();
-  }, [lockScreen]);
+  });
 
   const isSearchFocused = (
     Boolean(globalSearchChatId)
@@ -371,6 +392,10 @@ const LeftMainHeader: FC<OwnProps & StateProps> = ({
             lang.isRtl && 'rtl',
             shouldHideSearch && lang.isRtl && 'right-aligned',
             shouldDisableDropdownMenuTransitionRef.current && lang.isRtl && 'disable-transition',
+            /**
+             * TL - Trigger hide hamburger menu when search input focused in
+             */
+            isSearchFocused ? 'custom-dropdown-invisible' : 'custom-dropdown-visible',
           )}
           positionX={shouldHideSearch && lang.isRtl ? 'right' : 'left'}
           transformOriginX={IS_ELECTRON && !isFullscreen ? 90 : undefined}
@@ -384,12 +409,12 @@ const LeftMainHeader: FC<OwnProps & StateProps> = ({
           className={buildClassName(
             (globalSearchChatId || searchDate) ? 'with-picker-item' : undefined,
             shouldHideSearch && 'SearchInput--hidden',
+            'custom-style',
           )}
           value={isClosingSearch ? undefined : (contactsFilter || searchQuery)}
           focused={isSearchFocused}
           isLoading={isLoading || connectionStatusPosition === 'minimized'}
-          spinnerColor={connectionStatusPosition === 'minimized' ? 'yellow' : undefined}
-          // spinnerBackgroundColor={connectionStatusPosition === 'minimized' && theme === 'light' ? 'light' : undefined}
+          spinnerColor={connectionStatusPosition === 'minimized' ? 'gray' : undefined}
           spinnerBackgroundColor={connectionStatusPosition === 'minimized' && theme === 'light' ? 'light' : undefined}
           placeholder={searchInputPlaceholder}
           autoComplete="off"

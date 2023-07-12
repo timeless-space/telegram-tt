@@ -85,14 +85,21 @@ const AuthPhoneNumber: FC<StateProps> = ({
   useEffect(() => {
     setAuthRememberMe(true);
 
-    inputRef.current!.addEventListener('click', (_) => {
+    /**
+     * TL - Use trick to make button always above keyboard
+     * Description:
+     *   - First, prevent input from being scroll to the center of the screen
+     *   - Second, caculate x value. It calculates by substract clientHeight and viewHeight
+     *   - Third, translate view up by x pixels.
+     */
+    inputRef.current!.addEventListener('click', () => {
       if (!isFocused.current) {
         inputRef.current!.style.transform = 'TranslateY(-10000px)';
         inputRef.current!.style.caretColor = 'transparent';
         setTimeout(() => {
           inputRef.current!.style.transform = 'none';
           const scrollPixel = containerRef.current!.clientHeight
-            - currentViewportHeight.current + (window?.numberKeyboardHeight ?? 0) / 1.15 + 10;
+            - currentViewportHeight.current + ((window as any).numberKeyboardHeight ?? 0) / 1.15 + 10;
 
           if (scrollPixel > 0) {
             containerRef.current!.style.transform = `translateY(${-scrollPixel}px)`;
@@ -106,7 +113,7 @@ const AuthPhoneNumber: FC<StateProps> = ({
       }
     });
 
-    inputRef.current!.addEventListener('blur', (event) => {
+    inputRef.current!.addEventListener('blur', () => {
       isFocused.current = false;
       containerRef.current!.style.transform = 'translateY(0)';
       containerRef.current!.style.transition = 'transform 0.2s linear';
@@ -181,6 +188,11 @@ const AuthPhoneNumber: FC<StateProps> = ({
     });
   }, []);
 
+  // const handleCountryChange = useCallback((value: ApiCountryCode) => {
+  //   setCountry(value);
+  //   setPhoneNumber('');
+  // }, []);
+
   const handlePhoneNumberChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     if (authError) {
       clearAuthError();
@@ -190,6 +202,7 @@ const AuthPhoneNumber: FC<StateProps> = ({
     if (!isPreloadInitiated) {
       isPreloadInitiated = true;
       preloadFonts();
+      // void preloadImage(monkeyPath);
     }
 
     const { value, selectionStart, selectionEnd } = e.target;
@@ -208,6 +221,10 @@ const AuthPhoneNumber: FC<StateProps> = ({
     parseFullNumber(shouldFixSafariAutoComplete ? `${country!.countryCode} ${value}` : value);
   }, [authError, clearAuthError, country, fullNumber, parseFullNumber]);
 
+  // const handleKeepSessionChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  //   setAuthRememberMe(e.target.checked);
+  // }, [setAuthRememberMe]);
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     inputRef.current!.blur();
@@ -221,6 +238,10 @@ const AuthPhoneNumber: FC<StateProps> = ({
     }
   }
 
+  // const handleGoToAuthQrCode = useCallback(() => {
+  //   goToAuthQrCode();
+  // }, [goToAuthQrCode]);
+
   const isAuthReady = authState === 'authorizationStateWaitPhoneNumber';
 
   return (
@@ -233,6 +254,12 @@ const AuthPhoneNumber: FC<StateProps> = ({
         <h1>Sign in to Telegram</h1>
         <p className="note">{lang('StartText1')}<br />{lang('StartText2')}</p>
         <form className="form" action="" onSubmit={handleSubmit}>
+          {/* <CountryCodeInput
+            id="sign-in-phone-code"
+            value={country}
+            isLoading={!authNearestCountry && !country}
+            onChange={handleCountryChange}
+          /> */}
           <InputText
             ref={inputRef}
             className="relative"
@@ -247,7 +274,29 @@ const AuthPhoneNumber: FC<StateProps> = ({
             onLoading={!authNearestCountry && !country}
             disabled={!authNearestCountry && !country}
           />
-
+          {/* <Checkbox
+            id="sign-in-keep-session"
+            label="Keep me signed in"
+            checked={Boolean(authRememberMe)}
+            onChange={handleKeepSessionChange}
+          />
+          {canSubmit && (
+            isAuthReady ? (
+              <Button type="submit" ripple isLoading={authIsLoading}>{lang('Login.Next')}</Button>
+            ) : (
+              <Loading />
+            )
+          )}
+          {isAuthReady && (
+            <Button isText ripple isLoading={authIsLoadingQrCode} onClick={handleGoToAuthQrCode}>
+              {lang('Login.QR.Login')}
+            </Button>
+          )} */}
+          {
+            /**
+             * TL - Custom button styles follow sketch design
+             */
+          }
           <Button
             className={`capitalize-text ${canSubmit && isAuthReady ? 'btn-enable' : 'btn-disable'}`}
             type="submit"

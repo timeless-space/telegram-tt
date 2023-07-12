@@ -4,7 +4,6 @@
 
   &_items {
     overflow: auto;
-    overflow: overlay;
     padding: 0.5rem 0;
     overscroll-behavior: contain;
 
@@ -73,4 +72,9 @@
       }
     }
   }
+}
+
+.ReactionSelector-hidden {
+  opacity: 0;
+  transition: 300ms opacity;
 }

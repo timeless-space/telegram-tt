@@ -1,15 +1,16 @@
 import { getGlobal } from '../../../global';
-import { useCallback, useEffect, useRef } from '../../../lib/teact/teact';
+import { useEffect, useRef } from '../../../lib/teact/teact';
 
 import {
   selectFocusedMessageId,
   selectListedIds,
   selectOutlyingListByMessageId,
 } from '../../../global/selectors';
-
 import { unique } from '../../../util/iteratees';
 import { clamp } from '../../../util/math';
 import cycleRestrict from '../../../util/cycleRestrict';
+
+import useLastCallback from '../../../hooks/useLastCallback';
 import useSignal from '../../../hooks/useSignal';
 
 type PinnedIntersectionChangedParams = {
@@ -22,7 +23,9 @@ type PinnedIntersectionChangedParams = {
 
 export type PinnedIntersectionChangedCallback = (params: PinnedIntersectionChangedParams) => void;
 
-export default function usePinnedMessage(chatId?: string, threadId?: number, pinnedIds?: number[]) {
+export default function usePinnedMessage(
+  chatId?: string, threadId?: number, pinnedIds?: number[], topMessageId?: number,
+) {
   const [getCurrentPinnedIndexes, setCurrentPinnedIndexes] = useSignal<Record<string, number>>({});
   const [getForceNextPinnedInHeader, setForceNextPinnedInHeader] = useSignal<boolean | undefined>();
   const viewportPinnedIdsRef = useRef<number[] | undefined>();
@@ -51,7 +54,7 @@ export default function usePinnedMessage(chatId?: string, threadId?: number, pin
     }
   }, [getCurrentPinnedIndexes, key, pinnedIds?.length, setCurrentPinnedIndexes]);
 
-  const onIntersectionChanged = useCallback(({
+  const onIntersectionChanged = useLastCallback(({
     viewportPinnedIdsToAdd = [], viewportPinnedIdsToRemove = [], isReversed, hasScrolled, isUnmount,
   }: PinnedIntersectionChangedParams) => {
     if (!chatId || !threadId || !key) return;
@@ -126,16 +129,16 @@ export default function usePinnedMessage(chatId?: string, threadId?: number, pin
       ...getCurrentPinnedIndexes(),
       [key]: newIndex,
     });
-  }, [
-    chatId, threadId, key, pinnedIds, getLoadingPinnedId, getForceNextPinnedInHeader, setCurrentPinnedIndexes,
-    getCurrentPinnedIndexes, setLoadingPinnedId, setForceNextPinnedInHeader,
-  ]);
+  });
 
-  const onFocusPinnedMessage = useCallback((messageId: number): boolean => {
+  const onFocusPinnedMessage = useLastCallback((messageId: number): boolean => {
     if (!chatId || !threadId || !key || getLoadingPinnedId()) return false;
 
     const global = getGlobal();
-    if (!pinnedIds?.length) return false;
+    if (!pinnedIds?.length) {
+      // Focusing on a post in comments
+      return topMessageId === messageId;
+    }
 
     const index = pinnedIds.indexOf(messageId);
     const newPinnedIndex = cycleRestrict(pinnedIds.length, index + 1);
@@ -155,10 +158,7 @@ export default function usePinnedMessage(chatId?: string, threadId?: number, pin
       setLoadingPinnedId(pinnedIds[newPinnedIndex]);
       return true;
     }
-  }, [
-    chatId, getCurrentPinnedIndexes, getLoadingPinnedId, key, pinnedIds, setCurrentPinnedIndexes,
-    setForceNextPinnedInHeader, setLoadingPinnedId, threadId,
-  ]);
+  });
 
   return {
     onIntersectionChanged,

@@ -1,11 +1,13 @@
 import type { MouseEvent as ReactMouseEvent, RefObject } from 'react';
 
 import type { FC } from '../../lib/teact/teact';
-import React, { useRef, useCallback, useState } from '../../lib/teact/teact';
+import React, { useRef, useState } from '../../lib/teact/teact';
 
 import { IS_TOUCH_ENV, MouseButton } from '../../util/windowEnvironment';
 import buildClassName from '../../util/buildClassName';
 import buildStyle from '../../util/buildStyle';
+
+import useLastCallback from '../../hooks/useLastCallback';
 
 import Spinner from './Spinner';
 import RippleEffect from './RippleEffect';
@@ -49,6 +51,7 @@ export type OwnProps = {
   onClick?: (e: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onContextMenu?: (e: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onMouseDown?: (e: ReactMouseEvent<HTMLButtonElement>) => void;
+  onMouseUp?: (e: ReactMouseEvent<HTMLButtonElement>) => void;
   onMouseEnter?: (e: ReactMouseEvent<HTMLButtonElement>) => void;
   onMouseLeave?: NoneToVoidFunction;
   onFocus?: NoneToVoidFunction;
@@ -65,6 +68,7 @@ const Button: FC<OwnProps> = ({
   onClick,
   onContextMenu,
   onMouseDown,
+  onMouseUp,
   onMouseEnter,
   onMouseLeave,
   onFocus,
@@ -125,7 +129,7 @@ const Button: FC<OwnProps> = ({
     withPremiumGradient && 'premium',
   );
 
-  const handleClick = useCallback((e: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleClick = useLastCallback((e: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
     if ((allowDisabledClick || !disabled) && onClick) {
       onClick(e);
     }
@@ -136,9 +140,9 @@ const Button: FC<OwnProps> = ({
     setTimeout(() => {
       setIsClicked(false);
     }, CLICKED_TIMEOUT);
-  }, [allowDisabledClick, disabled, onClick, shouldStopPropagation]);
+  });
 
-  const handleMouseDown = useCallback((e: ReactMouseEvent<HTMLButtonElement>) => {
+  const handleMouseDown = useLastCallback((e: ReactMouseEvent<HTMLButtonElement>) => {
     if (!noPreventDefault) e.preventDefault();
 
     if ((allowDisabledClick || !disabled) && onMouseDown) {
@@ -148,7 +152,7 @@ const Button: FC<OwnProps> = ({
     if (!IS_TOUCH_ENV && e.button === MouseButton.Main && !noFastClick) {
       handleClick(e);
     }
-  }, [allowDisabledClick, disabled, handleClick, noFastClick, noPreventDefault, onMouseDown]);
+  });
 
   if (href) {
     return (
@@ -183,6 +187,7 @@ const Button: FC<OwnProps> = ({
       onClick={IS_TOUCH_ENV || noFastClick ? handleClick : undefined}
       onContextMenu={onContextMenu}
       onMouseDown={handleMouseDown}
+      onMouseUp={onMouseUp}
       onMouseEnter={onMouseEnter && !disabled ? onMouseEnter : undefined}
       onMouseLeave={onMouseLeave && !disabled ? onMouseLeave : undefined}
       onTransitionEnd={onTransitionEnd}
@@ -197,6 +202,11 @@ const Button: FC<OwnProps> = ({
     >
       {isLoading ? (
         <div>
+          {
+            /**
+             * TL - Custom button styles
+             */
+          }
           <span className="capitalize-text" dir={isRtl ? 'auto' : undefined}>Please wait...</span>
           <Spinner color={isText ? 'blue' : 'white'} />
         </div>

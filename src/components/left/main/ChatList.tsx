@@ -1,5 +1,5 @@
 import React, {
-  memo, useEffect, useRef, useCallback,
+  memo, useEffect, useRef,
 } from '../../../lib/teact/teact';
 import { getActions } from '../../../global';
 
@@ -20,6 +20,7 @@ import { IS_MAC_OS, IS_APP } from '../../../util/windowEnvironment';
 import { getPinnedChatsCount, getOrderKey } from '../../../util/folderManager';
 import buildClassName from '../../../util/buildClassName';
 
+import useLastCallback from '../../../hooks/useLastCallback';
 import useInfiniteScroll from '../../../hooks/useInfiniteScroll';
 import { useFolderManagerForOrderedIds } from '../../../hooks/useFolderManager';
 import { useIntersectionObserver } from '../../../hooks/useIntersectionObserver';
@@ -44,6 +45,7 @@ type OwnProps = {
   foldersDispatch: FolderEditDispatch;
   onSettingsScreenSelect: (screen: SettingsScreens) => void;
   onLeftColumnContentChange: (content: LeftColumnContent) => void;
+  activeChatFolder?: number;
 };
 
 const INTERSECTION_THROTTLE = 200;
@@ -61,6 +63,7 @@ const ChatList: FC<OwnProps> = ({
   foldersDispatch,
   onSettingsScreenSelect,
   onLeftColumnContentChange,
+  activeChatFolder,
 }) => {
   const { openChat, openNextChat, closeForumPanel } = getActions();
   // eslint-disable-next-line no-null/no-null
@@ -135,18 +138,18 @@ const ChatList: FC<OwnProps> = ({
     throttleMs: INTERSECTION_THROTTLE,
   });
 
-  const handleArchivedClick = useCallback(() => {
+  const handleArchivedClick = useLastCallback(() => {
     onLeftColumnContentChange(LeftColumnContent.Archived);
     closeForumPanel();
-  }, [closeForumPanel, onLeftColumnContentChange]);
+  });
 
-  const handleArchivedDragEnter = useCallback(() => {
+  const handleArchivedDragEnter = useLastCallback(() => {
     if (shouldIgnoreDragRef.current) {
       shouldIgnoreDragRef.current = false;
       return;
     }
     handleArchivedClick();
-  }, [handleArchivedClick]);
+  });
 
   const handleDragEnter = useDebouncedCallback((chatId: string) => {
     if (shouldIgnoreDragRef.current) {
@@ -156,19 +159,29 @@ const ChatList: FC<OwnProps> = ({
     openChat({ id: chatId, shouldReplaceHistory: true });
   }, [openChat], DRAG_ENTER_DEBOUNCE, true);
 
-  const handleDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragLeave = useLastCallback((e: React.DragEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     if (x < rect.width || y < rect.y) return;
     shouldIgnoreDragRef.current = true;
-  }, []);
+  });
 
   function renderChats() {
     const viewportOffset = orderedIds!.indexOf(viewportIds![0]);
 
     const pinnedCount = getPinnedChatsCount(resolvedFolderId) || 0;
-
+    /**
+     * TL - This function scroll the header whenever the chatList render.
+     */
+    setTimeout(() => {
+      if (containerRef.current && firstScroll.current) {
+        containerRef.current.scrollTo({ top: HEIGHT_HEADER_FIXED });
+        setTimeout(() => {
+          firstScroll.current = false;
+        }, 200);
+      }
+    }, 0);
     return viewportIds!.map((id, i) => {
       const isPinned = viewportOffset + i < pinnedCount;
       const offsetTop = archiveHeight + (viewportOffset + i) * CHAT_HEIGHT_PX + HEIGHT_HEADER_FIXED;
@@ -190,32 +203,46 @@ const ChatList: FC<OwnProps> = ({
     });
   }
 
-  useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollTo({ top: HEIGHT_HEADER_FIXED });
-      setTimeout(() => {
-        firstScroll.current = false;
-      }, 200)
-    }
-  }, []);
-
-  function handleScroll(event){
+  /**
+   * TL - Custom functions for chatList scroll
+   * Description: This function is used to trigger the header show or hide with an animation
+   */
+  function handleScroll(event: React.UIEvent<HTMLDivElement, UIEvent>) {
     if (firstScroll.current) return;
     const doc = document.documentElement;
     const scrollTop = event.currentTarget.scrollTop;
-    const scrollPercentRounded = Math.min(100, Math.round(scrollTop / HEIGHT_HEADER_FIXED * 100) * 0.7);
-    const opacity = 1 - scrollPercentRounded * 0.01
-    const opacityOffset = scrollTop >= HEIGHT_HEADER_FIXED + 10 || scrollPercentRounded == 100 ? 0 : opacity;
+    const scrollPercentRounded = Math.min(
+      100,
+      Math.round((scrollTop / HEIGHT_HEADER_FIXED) * 100),
+    );
+    const opacity = 1 - scrollPercentRounded * 0.01;
+    const opacityOffset = scrollTop >= HEIGHT_HEADER_FIXED + 10 || scrollPercentRounded == 100
+      ? 0
+      : opacity;
 
-    doc.style.setProperty(
-      "--header-translate",
-      `-${scrollPercentRounded}%`
+    const translatePixel = scrollTop >= HEIGHT_HEADER_FIXED || scrollPercentRounded == 100 ? 0 : Math.min(
+      HEIGHT_HEADER_FIXED,
+      ((100 - scrollPercentRounded) * HEIGHT_HEADER_FIXED) / 100,
     );
+    const tabFolderTranslatePixel = translatePixel;
+    const currentPropertyInStorage = sessionStorage.getItem(activeChatFolder);
+    if (currentPropertyInStorage) {
+      sessionStorage.setItem(
+        activeChatFolder,
+        JSON.stringify({
+          scrollPercentRounded,
+          tabFolderTranslatePixel,
+          opacityOffset,
+        }),
+      );
+    }
+    doc.style.setProperty('--header-translate', `-${scrollPercentRounded}%`);
     doc.style.setProperty(
-      "--fi-show-header-opacity",
-      `${opacityOffset}`
+      '--tab-folder-translate',
+      `${tabFolderTranslatePixel}px`,
     );
-}
+    doc.style.setProperty('--fi-show-header-opacity', `${opacityOffset}`);
+  }
 
   return (
     <InfiniteScroll
@@ -225,7 +252,7 @@ const ChatList: FC<OwnProps> = ({
       itemSelector=".ListItem:not(.chat-item-archive)"
       preloadBackwards={CHAT_LIST_SLICE}
       withAbsolutePositioning
-      maxHeight={chatsHeight + archiveHeight}
+      maxHeight={chatsHeight + archiveHeight + HEIGHT_HEADER_FIXED}
       onLoadMore={getMore}
       onDragLeave={handleDragLeave}
       onScroll={handleScroll}

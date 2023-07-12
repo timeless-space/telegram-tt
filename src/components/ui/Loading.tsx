@@ -6,8 +6,11 @@ import buildClassName from '../../util/buildClassName';
 
 import './Loading.scss';
 
+/**
+ * TL - Custom Loading Component, add gray color
+ */
 type OwnProps = {
-  color?: 'blue' | 'white' | 'black' | 'yellow';
+  color?: 'blue' | 'white' | 'black' | 'yellow' | 'gray';
   backgroundColor?: 'light' | 'dark';
   onClick?: NoneToVoidFunction;
   ref?: React.Ref<HTMLDivElement>;
@@ -15,7 +18,7 @@ type OwnProps = {
 };
 
 const Loading: FC<OwnProps> = ({
-  color = 'blue', backgroundColor, onClick, ref, className,
+  color, backgroundColor, onClick, ref, className,
 }) => {
   return (
     <div ref={ref} className={buildClassName('Loading', onClick && 'interactive', className)} onClick={onClick}>

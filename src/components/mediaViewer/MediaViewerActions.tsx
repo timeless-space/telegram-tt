@@ -1,8 +1,4 @@
-import React, {
-  memo,
-  useCallback,
-  useMemo,
-} from '../../lib/teact/teact';
+import React, { memo, useMemo } from '../../lib/teact/teact';
 import { getActions, withGlobal } from '../../global';
 
 import type { FC } from '../../lib/teact/teact';
@@ -21,6 +17,7 @@ import {
 } from '../../global/selectors';
 import { getMessageMediaFormat, getMessageMediaHash, isUserId } from '../../global/helpers';
 
+import useLastCallback from '../../hooks/useLastCallback';
 import useLang from '../../hooks/useLang';
 import useMediaWithLoadProgress from '../../hooks/useMediaWithLoadProgress';
 import useFlag from '../../hooks/useFlag';
@@ -100,27 +97,27 @@ const MediaViewerActions: FC<OwnProps & StateProps> = ({
     message && getMessageMediaFormat(message, 'download'),
   );
 
-  const handleDownloadClick = useCallback(() => {
+  const handleDownloadClick = useLastCallback(() => {
     if (isDownloading) {
       cancelMessageMediaDownload({ message: message! });
     } else {
       downloadMessageMedia({ message: message! });
     }
-  }, [cancelMessageMediaDownload, downloadMessageMedia, isDownloading, message]);
+  });
 
-  const handleZoomOut = useCallback(() => {
+  const handleZoomOut = useLastCallback(() => {
     const zoomChange = getZoomChange();
     const change = zoomChange < 0 ? zoomChange : 0;
     setZoomChange(change - 1);
-  }, [getZoomChange, setZoomChange]);
+  });
 
-  const handleZoomIn = useCallback(() => {
+  const handleZoomIn = useLastCallback(() => {
     const zoomChange = getZoomChange();
     const change = zoomChange > 0 ? zoomChange : 0;
     setZoomChange(change + 1);
-  }, [getZoomChange, setZoomChange]);
+  });
 
-  const handleUpdate = useCallback(() => {
+  const handleUpdate = useLastCallback(() => {
     if (!avatarPhoto || !avatarOwnerId) return;
     if (isUserId(avatarOwnerId)) {
       updateProfilePhoto({ photo: avatarPhoto });
@@ -128,7 +125,7 @@ const MediaViewerActions: FC<OwnProps & StateProps> = ({
       updateChatPhoto({ chatId: avatarOwnerId, photo: avatarPhoto });
     }
     selectMedia(0);
-  }, [avatarPhoto, avatarOwnerId, selectMedia, updateProfilePhoto, updateChatPhoto]);
+  });
 
   const lang = useLang();
 
@@ -204,7 +201,7 @@ const MediaViewerActions: FC<OwnProps & StateProps> = ({
 
   if (isMobile) {
     const menuItems: MenuItemProps[] = [];
-    if (!message?.isForwardingAllowed && !isChatProtected) {
+    if (message?.isForwardingAllowed && !isChatProtected) {
       menuItems.push({
         icon: 'forward',
         onClick: onForward,
@@ -230,7 +227,7 @@ const MediaViewerActions: FC<OwnProps & StateProps> = ({
 
     if (canReport) {
       menuItems.push({
-        icon: 'report',
+        icon: 'flag',
         onClick: onReport,
         children: lang('ReportPeer.Report'),
       });
@@ -249,6 +246,7 @@ const MediaViewerActions: FC<OwnProps & StateProps> = ({
         icon: 'delete',
         onClick: openDeleteModal,
         children: lang('Delete'),
+        destructive: true,
       });
     }
 
@@ -263,7 +261,7 @@ const MediaViewerActions: FC<OwnProps & StateProps> = ({
           positionX="right"
         >
           {menuItems.map(({
-            icon, onClick, href, download, children,
+            icon, onClick, href, download, children, destructive,
           }) => (
             <MenuItem
               key={icon}
@@ -271,6 +269,7 @@ const MediaViewerActions: FC<OwnProps & StateProps> = ({
               href={href}
               download={download}
               onClick={onClick}
+              destructive={destructive}
             >
               {children}
             </MenuItem>

@@ -68,7 +68,14 @@ const ContactList: FC<OwnProps & StateProps> = ({
   const [viewportIds, getMore] = useInfiniteScroll(undefined, listIds, Boolean(filter));
 
   return (
-    <InfiniteScroll items={viewportIds} onLoadMore={getMore} preloadBackwards={PRELOAD_CONTACT} noScrollRestoreOnTop noScrollRestore className="chat-list custom-scroll">
+    <InfiniteScroll
+      items={viewportIds}
+      onLoadMore={getMore}
+      preloadBackwards={PRELOAD_CONTACT}
+      noScrollRestoreOnTop
+      noScrollRestore
+      className="chat-list custom-scroll"
+    >
       {viewportIds?.length ? (
         viewportIds.map((id) => (
           <ListItem

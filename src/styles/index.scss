@@ -8,9 +8,13 @@
 @import "../assets/fonts/roboto.css";
 @import "./print";
 
+/**
+ * TL - These properties are used to set sticky header.
+ */
 html {
   --header-translate: -100%;
-  --default-translateY-transition: -56px;
+  --tab-folder-translate: 0px;
+  --fi-show-header-opacity: 0;
 }
 
 html,
@@ -320,9 +324,7 @@ body:not(.is-ios) {
 }
 
 .fix-issue {
-  // visibility: var(--fi-show-header);
   opacity: var(--fi-show-header-opacity);
-  // height: var(--header-height);
   transform: translateY(var(--header-translate));
   transition: all 0.1s ease-out;
   max-height: 56px;
@@ -330,4 +332,8 @@ body:not(.is-ios) {
   top: 0;
   width: 100%;
   z-index: 100;
+}
+
+.padding-top-56px {
+  padding-top: 56px;
 }

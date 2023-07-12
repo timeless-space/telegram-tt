@@ -1,6 +1,4 @@
-import React, {
-  memo, useCallback, useMemo, useRef,
-} from '../../../lib/teact/teact';
+import React, { memo, useMemo, useRef } from '../../../lib/teact/teact';
 
 import type { FC } from '../../../lib/teact/teact';
 import type {
@@ -8,10 +6,12 @@ import type {
 } from '../../../api/types';
 import type { IAnchorPosition } from '../../../types';
 
-import { createClassNameBuilder } from '../../../util/buildClassName';
+import buildClassName, { createClassNameBuilder } from '../../../util/buildClassName';
 import {
   isSameReaction, canSendReaction, getReactionUniqueKey, sortReactions,
 } from '../../../global/helpers';
+
+import useLastCallback from '../../../hooks/useLastCallback';
 import useLang from '../../../hooks/useLang';
 
 import ReactionSelectorReaction from './ReactionSelectorReaction';
@@ -32,6 +32,7 @@ type OwnProps = {
   isCurrentUserPremium?: boolean;
   canPlayAnimatedEmojis?: boolean;
   onShowMore: (position: IAnchorPosition) => void;
+  className?: string;
 };
 
 const cn = createClassNameBuilder('ReactionSelector');
@@ -48,6 +49,7 @@ const ReactionSelector: FC<OwnProps> = ({
   canPlayAnimatedEmojis,
   onToggleReaction,
   onShowMore,
+  className,
 }) => {
   // eslint-disable-next-line no-null/no-null
   const ref = useRef<HTMLDivElement>(null);
@@ -83,18 +85,18 @@ const ReactionSelector: FC<OwnProps> = ({
     )));
   }, [currentReactions, reactionsToRender]);
 
-  const handleShowMoreClick = useCallback(() => {
+  const handleShowMoreClick = useLastCallback(() => {
     const bound = ref.current?.getBoundingClientRect() || { x: 0, y: 0 };
     onShowMore({
       x: bound.x,
       y: bound.y,
     });
-  }, [onShowMore]);
+  });
 
   if (!reactionsToRender.length) return undefined;
 
   return (
-    <div className={cn('&', lang.isRtl && 'isRtl')} ref={ref}>
+    <div className={buildClassName(cn('&', lang.isRtl && 'isRtl'), className)} ref={ref}>
       <div className={cn('bubble-small', lang.isRtl && 'isRtl')} />
       <div className={cn('items-wrapper')}>
         <div className={cn('bubble-big', lang.isRtl && 'isRtl')} />

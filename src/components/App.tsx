@@ -198,6 +198,9 @@ const App: FC<StateProps> = ({
   }
 
   useLayoutEffect(() => {
+    /**
+     * TL - Set window properties for esier call registration and unregistration
+     */
     const { signOut } = getActions();
     (window as any).signOutGlobal = signOut;
     (window as any).changePaddingTopMobileGlobal = changePaddingTopMobile;
@@ -211,6 +214,7 @@ const App: FC<StateProps> = ({
       '--theme-background-color',
       theme === 'dark' ? DARK_THEME_BG_COLOR : LIGHT_THEME_BG_COLOR,
     );
+    sessionStorage.clear();
   }, [theme]);
 
   return (

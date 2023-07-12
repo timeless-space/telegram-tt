@@ -1,20 +1,17 @@
-@import "../../../styles/mixins";
-
 .Composer {
   align-items: flex-end;
 
   .select-mode-active + .middle-column-footer & {
     position: absolute;
     padding-right: 2rem;
-    bottom: env(safe-area-inset-bottom);
-
-    // Target: Old Firefox (Waterfox Classic)
-    @supports not (bottom: env(safe-area-inset-bottom)) {
-      bottom: 0;
-    }
+    bottom: 0;
 
     @media (max-width: 600px) {
       padding-right: 1rem;
+
+      @supports (bottom: env(safe-area-inset-bottom)) {
+        bottom: env(safe-area-inset-bottom);
+      }
     }
 
     &::before {
@@ -666,7 +663,6 @@
 
   overflow-x: hidden;
   overflow-y: auto;
-  @include overflow-y-overlay();
 
   box-shadow: 0 1px 2px var(--color-default-shadow);
 

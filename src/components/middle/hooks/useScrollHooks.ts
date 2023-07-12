@@ -1,7 +1,5 @@
 import type { RefObject } from 'react';
-import {
-  useCallback, useEffect, useMemo, useRef,
-} from '../../../lib/teact/teact';
+import { useEffect, useMemo, useRef } from '../../../lib/teact/teact';
 import { requestMeasure } from '../../../lib/fasterdom/fasterdom';
 import { getActions } from '../../../global';
 
@@ -13,15 +11,15 @@ import { MESSAGE_LIST_SENSITIVE_AREA } from '../../../util/windowEnvironment';
 import { debounce } from '../../../util/schedulers';
 import { isLocalMessageId } from '../../../global/helpers';
 
+import useLastCallback from '../../../hooks/useLastCallback';
 import { useIntersectionObserver, useOnIntersect } from '../../../hooks/useIntersectionObserver';
 import useSyncEffect from '../../../hooks/useSyncEffect';
-import { useStateRef } from '../../../hooks/useStateRef';
 import { useSignalEffect } from '../../../hooks/useSignalEffect';
 import { useDebouncedSignal } from '../../../hooks/useAsyncResolvers';
 
 const FAB_THRESHOLD = 50;
 const NOTCH_THRESHOLD = 1; // Notch has zero height so we at least need a 1px margin to intersect
-const CONTAINER_HEIGHT_DEBOUNCE = 100;
+const CONTAINER_HEIGHT_DEBOUNCE = 200;
 const TOOLS_FREEZE_TIMEOUT = 350; // Approximate message sending animation duration
 
 export default function useScrollHooks(
@@ -53,10 +51,10 @@ export default function useScrollHooks(
   // eslint-disable-next-line no-null/no-null
   const fabTriggerRef = useRef<HTMLDivElement>(null);
 
-  function toggleScrollTools() {
+  const toggleScrollTools = useLastCallback(() => {
     if (!isReady) return;
 
-    if (!messageIds || !messageIds.length) {
+    if (!messageIds?.length) {
       onFabToggle(false);
       onNotchToggle(false);
       return;
@@ -82,10 +80,10 @@ export default function useScrollHooks(
 
     onFabToggle(isUnread ? !isAtBottom : !isNearBottom);
     onNotchToggle(!isAtBottom);
-  }
+  });
 
   const {
-    observe: observeIntersection,
+    observe: observeIntersectionForHistory,
   } = useIntersectionObserver({
     rootRef: containerRef,
     margin: MESSAGE_LIST_SENSITIVE_AREA,
@@ -100,22 +98,23 @@ export default function useScrollHooks(
       return;
     }
 
-    const triggerEntry = entries.find(({ isIntersecting }) => isIntersecting);
-    if (!triggerEntry) {
-      return;
-    }
+    entries.forEach(({ isIntersecting, target }) => {
+      if (!isIntersecting) return;
 
-    const { target } = triggerEntry;
+      if (target.className === 'backwards-trigger') {
+        loadMoreBackwards();
+      }
 
-    if (target.className === 'backwards-trigger') {
-      loadMoreBackwards();
-    } else if (target.className === 'forwards-trigger') {
-      loadMoreForwards();
-    }
+      if (target.className === 'forwards-trigger') {
+        loadMoreForwards();
+      }
+    });
   });
 
-  useOnIntersect(backwardsTriggerRef, observeIntersection);
-  useOnIntersect(forwardsTriggerRef, observeIntersection);
+  const withHistoryTriggers = messageIds && messageIds.length > 1;
+
+  useOnIntersect(backwardsTriggerRef, withHistoryTriggers ? observeIntersectionForHistory : undefined);
+  useOnIntersect(forwardsTriggerRef, withHistoryTriggers ? observeIntersectionForHistory : undefined);
 
   const {
     observe: observeIntersectionForFab,
@@ -141,14 +140,13 @@ export default function useScrollHooks(
 
   useOnIntersect(fabTriggerRef, observeIntersectionForNotch);
 
-  const toggleScrollToolsRef = useStateRef(toggleScrollTools);
   useEffect(() => {
     if (isReady) {
-      toggleScrollToolsRef.current!();
+      toggleScrollTools();
     }
-  }, [isReady, toggleScrollToolsRef]);
+  }, [isReady, toggleScrollTools]);
 
-  const freezeShortly = useCallback(() => {
+  const freezeShortly = useLastCallback(() => {
     freezeForFab();
     freezeForNotch();
 
@@ -156,7 +154,7 @@ export default function useScrollHooks(
       unfreezeForNotch();
       unfreezeForFab();
     }, TOOLS_FREEZE_TIMEOUT);
-  }, [freezeForFab, freezeForNotch, unfreezeForFab, unfreezeForNotch]);
+  });
 
   // Workaround for FAB and notch flickering with tall incoming message
   useSyncEffect(freezeShortly, [freezeShortly, messageIds]);
@@ -165,5 +163,10 @@ export default function useScrollHooks(
   const getContainerHeightDebounced = useDebouncedSignal(getContainerHeight, CONTAINER_HEIGHT_DEBOUNCE);
   useSignalEffect(freezeShortly, [freezeShortly, getContainerHeightDebounced]);
 
-  return { backwardsTriggerRef, forwardsTriggerRef, fabTriggerRef };
+  return {
+    withHistoryTriggers,
+    backwardsTriggerRef,
+    forwardsTriggerRef,
+    fabTriggerRef,
+  };
 }

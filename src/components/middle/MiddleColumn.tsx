@@ -1,6 +1,6 @@
 import type { RefObject } from 'react';
 import React, {
-  useEffect, useState, memo, useMemo, useCallback,
+  useEffect, useState, memo, useMemo,
 } from '../../lib/teact/teact';
 import { requestMutation } from '../../lib/fasterdom/fasterdom';
 import { getActions, withGlobal } from '../../global';
@@ -32,7 +32,7 @@ import { DropAreaState } from './composer/DropArea';
 import {
   selectCanAnimateInterface,
   selectChat,
-  selectChatBot,
+  selectBot,
   selectChatFullInfo,
   selectChatMessage,
   selectCurrentMessageList,
@@ -46,6 +46,7 @@ import {
   selectTabState,
   selectTheme,
   selectThreadInfo,
+  selectThreadTopMessageId,
 } from '../../global/selectors';
 import {
   getCanPostInChat,
@@ -59,6 +60,8 @@ import {
 import calculateMiddleFooterTransforms from './helpers/calculateMiddleFooterTransforms';
 import captureEscKeyListener from '../../util/captureEscKeyListener';
 import buildClassName from '../../util/buildClassName';
+
+import useLastCallback from '../../hooks/useLastCallback';
 import useCustomBackground from '../../hooks/useCustomBackground';
 import useWindowSize from '../../hooks/useWindowSize';
 import usePrevDuringAnimation from '../../hooks/usePrevDuringAnimation';
@@ -138,6 +141,7 @@ type StateProps = {
   shouldSendJoinRequest?: boolean;
   lastSyncTime?: number;
   pinnedIds?: number[];
+  topMessageId?: number;
 };
 
 function isImage(item: DataTransferItem) {
@@ -191,6 +195,7 @@ function MiddleColumn({
   shouldLoadFullChat,
   lastSyncTime,
   pinnedIds,
+  topMessageId,
 }: OwnProps & StateProps) {
   const {
     openChat,
@@ -224,7 +229,7 @@ function MiddleColumn({
     getCurrentPinnedIndexes,
     getLoadingPinnedId,
     getForceNextPinnedInHeader,
-  } = usePinnedMessage(chatId, threadId, pinnedIds);
+  } = usePinnedMessage(chatId, threadId, pinnedIds, topMessageId);
 
   const isMobileSearchActive = isMobile && hasCurrentTextSearch;
   const closeAnimationDuration = isMobile ? LAYER_ANIMATION_DURATION_MS : undefined;
@@ -307,7 +312,7 @@ function MiddleColumn({
     return () => {
       visualViewport.removeEventListener('resize', handleResize);
     };
-  }, []);
+  });
 
   useEffect(() => {
     if (isPrivate) {
@@ -333,7 +338,7 @@ function MiddleColumn({
     leftColumnWidth: n,
   }), resetLeftColumnWidth, leftColumnWidth, '--left-column-width');
 
-  const handleDragEnter = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragEnter = useLastCallback((e: React.DragEvent<HTMLDivElement>) => {
     const { items } = e.dataTransfer || {};
     const shouldDrawQuick = items && items.length > 0 && Array.from(items)
       // Filter unnecessary element for drag and drop images in Firefox (https://github.com/Ajaxy/telegram-tt/issues/49)
@@ -343,46 +348,46 @@ function MiddleColumn({
       .every(isImage);
 
     setDropAreaState(shouldDrawQuick ? DropAreaState.QuickFile : DropAreaState.Document);
-  }, []);
+  });
 
-  const handleHideDropArea = useCallback(() => {
+  const handleHideDropArea = useLastCallback(() => {
     setDropAreaState(DropAreaState.None);
-  }, []);
+  });
 
-  const handleOpenUnpinModal = useCallback(() => {
+  const handleOpenUnpinModal = useLastCallback(() => {
     setIsUnpinModalOpen(true);
-  }, []);
+  });
 
-  const closeUnpinModal = useCallback(() => {
+  const closeUnpinModal = useLastCallback(() => {
     setIsUnpinModalOpen(false);
-  }, []);
+  });
 
-  const handleUnpinAllMessages = useCallback(() => {
+  const handleUnpinAllMessages = useLastCallback(() => {
     unpinAllMessages({ chatId: chatId!, threadId: threadId! });
     closeUnpinModal();
     openPreviousChat();
-  }, [unpinAllMessages, chatId, threadId, closeUnpinModal, openPreviousChat]);
+  });
 
-  const handleTabletFocus = useCallback(() => {
+  const handleTabletFocus = useLastCallback(() => {
     openChat({ id: chatId });
-  }, [openChat, chatId]);
+  });
 
-  const handleSubscribeClick = useCallback(() => {
+  const handleSubscribeClick = useLastCallback(() => {
     joinChannel({ chatId: chatId! });
     if (renderingShouldSendJoinRequest) {
       showNotification({
         message: isChannel ? lang('RequestToJoinChannelSentDescription') : lang('RequestToJoinGroupSentDescription'),
       });
     }
-  }, [joinChannel, chatId, renderingShouldSendJoinRequest, showNotification, isChannel, lang]);
+  });
 
-  const handleStartBot = useCallback(() => {
+  const handleStartBot = useLastCallback(() => {
     sendBotCommand({ command: '/start' });
-  }, [sendBotCommand]);
+  });
 
-  const handleRestartBot = useCallback(() => {
+  const handleRestartBot = useLastCallback(() => {
     restartBot({ chatId: chatId! });
-  }, [chatId, restartBot]);
+  });
 
   const customBackgroundValue = useCustomBackground(theme, customBackground);
 
@@ -689,7 +694,7 @@ export default memo(withGlobal<OwnProps>(
     const { chatId, threadId, type: messageListType } = currentMessageList;
     const isPrivate = isUserId(chatId);
     const chat = selectChat(global, chatId);
-    const bot = selectChatBot(global, chatId);
+    const bot = selectBot(global, chatId);
     const pinnedIds = selectPinnedIds(global, chatId, threadId);
     const { chatId: audioChatId, messageId: audioMessageId } = audioPlayer;
 
@@ -718,6 +723,9 @@ export default memo(withGlobal<OwnProps>(
       ? selectChatMessage(global, audioChatId, audioMessageId)
       : undefined;
 
+    const isCommentThread = threadId !== MAIN_THREAD_ID && !chat?.isForum;
+    const topMessageId = isCommentThread ? selectThreadTopMessageId(global, chatId, threadId) : undefined;
+
     return {
       ...state,
       chatId,
@@ -735,10 +743,7 @@ export default memo(withGlobal<OwnProps>(
       isPinnedMessageList,
       currentUserBannedRights: chat?.currentUserBannedRights,
       defaultBannedRights: chat?.defaultBannedRights,
-      hasPinned: (
-        (threadId !== MAIN_THREAD_ID && !chat?.isForum)
-        || Boolean(!isPinnedMessageList && pinnedIds?.length)
-      ),
+      hasPinned: isCommentThread || Boolean(!isPinnedMessageList && pinnedIds?.length),
       hasAudioPlayer: Boolean(audioMessage),
       hasButtonInHeader: canStartBot || canRestartBot || canSubscribe || shouldSendJoinRequest,
       pinnedMessagesCount: pinnedIds ? pinnedIds.length : 0,
@@ -751,6 +756,7 @@ export default memo(withGlobal<OwnProps>(
       shouldSendJoinRequest,
       shouldLoadFullChat,
       pinnedIds,
+      topMessageId,
     };
   },
 )(MiddleColumn));

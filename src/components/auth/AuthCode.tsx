@@ -8,10 +8,13 @@ import type { GlobalState } from '../../global/types';
 
 import { IS_TOUCH_ENV } from '../../util/windowEnvironment';
 import { pick } from '../../util/iteratees';
+// import renderText from '../common/helpers/renderText';
 import useHistoryBack from '../../hooks/useHistoryBack';
 import useLang from '../../hooks/useLang';
 
 import InputText from '../ui/InputText';
+// import Loading from '../ui/Loading';
+// import TrackingMonkey from '../common/TrackingMonkey';
 import { fallbackLangPackInitial as langPack } from '../../util/fallbackLangPackInitial';
 
 type StateProps = Pick<GlobalState, 'authPhoneNumber' | 'authIsCodeViaApp' | 'authIsLoading' | 'authError'>;
@@ -20,6 +23,7 @@ const CODE_LENGTH = 5;
 
 const AuthCode: FC<StateProps> = ({
   authPhoneNumber,
+  // authIsCodeViaApp,
   authIsLoading,
   authError,
 }) => {
@@ -37,6 +41,7 @@ const AuthCode: FC<StateProps> = ({
 
   const [code, setCode] = useState<string>('');
   const [isTracking, setIsTracking] = useState(false);
+  // const [trackingDirection, setTrackingDirection] = useState(1);
   const currentViewportHeight = useRef<number>(Number(window.visualViewport!.height));
   const isFocused = useRef<boolean>(false);
 
@@ -45,14 +50,21 @@ const AuthCode: FC<StateProps> = ({
       inputRef.current!.focus();
     }
 
-    inputRef.current!.addEventListener('focusin', (_) => {
+    /**
+     * TL - Use trick to make button always above keyboard
+     * Description:
+     *   - First, prevent input from being scroll to the center of the screen
+     *   - Second, caculate x value. It calculates by substract clientHeight and viewHeight
+     *   - Third, translate view up by x pixels.
+     */
+    inputRef.current!.addEventListener('focusin', () => {
       if (!isFocused.current) {
         inputRef.current!.style.transform = 'TranslateY(-10000px)';
         inputRef.current!.style.caretColor = 'transparent';
         setTimeout(() => {
           inputRef.current!.style.transform = 'none';
           const scrollPixel = containerRef.current!.clientHeight
-            - currentViewportHeight.current + (window?.numberKeyboardHeight ?? 0) / 1.15 + 10;
+            - currentViewportHeight.current + ((window as any).numberKeyboardHeight ?? 0) / 1.15 + 10;
 
           if (scrollPixel > 0) {
             containerRef.current!.style.transform = `translateY(${-scrollPixel}px)`;
@@ -66,7 +78,7 @@ const AuthCode: FC<StateProps> = ({
       }
     });
 
-    inputRef.current!.addEventListener('blur', (_) => {
+    inputRef.current!.addEventListener('blur', () => {
       isFocused.current = false;
       containerRef.current!.style.transform = 'translateY(0)';
       containerRef.current!.style.transition = 'transform 0.2s linear';

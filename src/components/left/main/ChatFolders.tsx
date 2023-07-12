@@ -1,6 +1,6 @@
 import type { FC } from '../../../lib/teact/teact';
 import React, {
-  memo, useCallback, useEffect, useMemo, useRef,
+  memo, useEffect, useMemo, useRef,
 } from '../../../lib/teact/teact';
 import { getActions, getGlobal, withGlobal } from '../../../global';
 
@@ -18,6 +18,8 @@ import buildClassName from '../../../util/buildClassName';
 import captureEscKeyListener from '../../../util/captureEscKeyListener';
 import { selectCurrentLimit } from '../../../global/selectors/limits';
 import { selectCanShareFolder, selectTabState } from '../../../global/selectors';
+
+import useLastCallback from '../../../hooks/useLastCallback';
 import useShowTransition from '../../../hooks/useShowTransition';
 import useLang from '../../../hooks/useLang';
 import useHistoryBack from '../../../hooks/useHistoryBack';
@@ -180,9 +182,9 @@ const ChatFolders: FC<OwnProps & StateProps> = ({
     });
   }, [displayedFolders, folderCountersById, lang, maxFolders, folderInvitesById, maxFolderInvites]);
 
-  const handleSwitchTab = useCallback((index: number) => {
+  const handleSwitchTab = useLastCallback((index: number) => {
     setActiveChatFolder({ activeChatFolder: index }, { forceOnHeavyAnimation: true });
-  }, [setActiveChatFolder]);
+  });
 
   // Prevent `activeTab` pointing at non-existing folder after update
   useEffect(() => {
@@ -262,10 +264,54 @@ const ChatFolders: FC<OwnProps & StateProps> = ({
     shouldRender: shouldRenderPlaceholder, transitionClassNames,
   } = useShowTransition(!orderedFolderIds, undefined, true);
 
+  /**
+   * TL - Custom transition interact with header
+   * Description: This useEffect hook active when activeChatFolder is selected. Get translate value from session storage
+   */
+  useEffect(() => {
+    const currentPropertyInStorage = JSON.parse(
+      sessionStorage.getItem(activeChatFolder)
+    );
+
+    const doc = document.documentElement;
+    if (currentPropertyInStorage) {
+      doc.style.setProperty(
+        '--header-translate',
+        `-${currentPropertyInStorage.scrollPercentRounded}%`,
+      );
+      doc.style.setProperty(
+        '--tab-folder-translate',
+        `${currentPropertyInStorage.tabFolderTranslatePixel}px`,
+      );
+      doc.style.setProperty(
+        '--fi-show-header-opacity',
+        `${currentPropertyInStorage.opacityOffset}`,
+      );
+    } else {
+      doc.style.setProperty('--header-translate', '-100%');
+      doc.style.setProperty('--tab-folder-translate', '0px');
+      doc.style.setProperty('--fi-show-header-opacity', '0');
+    }
+  }, [activeChatFolder]);
+
   function renderCurrentTab(isActive: boolean) {
     const activeFolder = Object.values(chatFoldersById)
       .find(({ id }) => id === folderTabs![activeChatFolder].id);
     const isFolder = activeFolder && !isInAllChatsFolder;
+    /**
+     * TL - Check and set default values for each screens that have header.
+     */
+    const folderHasProperty = sessionStorage.getItem(activeChatFolder);
+    if (!folderHasProperty) {
+      sessionStorage.setItem(
+        activeChatFolder,
+        JSON.stringify({
+          scrollPercentRounded: 100,
+          tabFolderTranslatePixel: 0,
+          opacityOffset: 0,
+        }),
+      );
+    }
 
     return (
       <ChatList
@@ -279,6 +325,7 @@ const ChatFolders: FC<OwnProps & StateProps> = ({
         onLeftColumnContentChange={onLeftColumnContentChange}
         canDisplayArchive={hasArchivedChats && !archiveSettings.isHidden}
         archiveSettings={archiveSettings}
+        activeChatFolder={activeChatFolder}
       />
     );
   }

@@ -1,6 +1,5 @@
 import React, {
   memo,
-  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -33,11 +32,10 @@ import {
   selectChat,
   selectIsInSelectMode,
   selectIsChatWithSelf,
-  selectChatBot,
+  selectBot,
   selectIsChatBotNotStarted,
   selectScrollOffset,
   selectThreadTopMessageId,
-  selectFirstMessageId,
   selectChatScheduledMessages,
   selectCurrentMessageIds,
   selectIsCurrentUserPremium,
@@ -69,6 +67,7 @@ import resetScroll from '../../util/resetScroll';
 import animateScroll, { isAnimatingScroll, restartCurrentScrollAnimation } from '../../util/animateScroll';
 import renderText from '../common/helpers/renderText';
 
+import useLastCallback from '../../hooks/useLastCallback';
 import { useStateRef } from '../../hooks/useStateRef';
 import useSyncEffect from '../../hooks/useSyncEffect';
 import useStickyDates from './hooks/useStickyDates';
@@ -127,7 +126,6 @@ type StateProps = {
   isLoadingBotInfo?: boolean;
   botInfo?: ApiBotInfo;
   threadTopMessageId?: number;
-  threadFirstMessageId?: number;
   hasLinkedChat?: boolean;
   lastSyncTime?: number;
   topic?: ApiTopic;
@@ -170,7 +168,6 @@ const MessageList: FC<OwnProps & StateProps> = ({
   firstUnreadId,
   isComments,
   isViewportNewest,
-  threadFirstMessageId,
   isRestricted,
   restrictionReason,
   focusingId,
@@ -259,23 +256,11 @@ const MessageList: FC<OwnProps & StateProps> = ({
   useNativeCopySelectedMessages(copyMessagesByIds);
 
   const messageGroups = useMemo(() => {
-    if (!messageIds || !messagesById) {
+    if (!messageIds?.length || !messagesById) {
       return undefined;
     }
 
-    const viewportIds = (
-      threadTopMessageId
-      && threadFirstMessageId !== threadTopMessageId
-      && (!messageIds[0] || threadFirstMessageId === messageIds[0])
-    )
-      ? [threadTopMessageId, ...messageIds]
-      : messageIds;
-
-    if (!viewportIds.length) {
-      return undefined;
-    }
-
-    const listedMessages = viewportIds.map((id) => messagesById[id]).filter(Boolean);
+    const listedMessages = messageIds.map((id) => messagesById[id]).filter(Boolean);
 
     // Service notifications have local IDs which may be not in sync with real message history
     const orderRule: (keyof ApiMessage)[] = type === 'scheduled' || isServiceNotificationsChat
@@ -285,10 +270,10 @@ const MessageList: FC<OwnProps & StateProps> = ({
     return listedMessages.length
       ? groupMessages(orderBy(listedMessages, orderRule), memoUnreadDividerBeforeIdRef.current)
       : undefined;
-  }, [messageIds, messagesById, threadFirstMessageId, threadTopMessageId, type, isServiceNotificationsChat]);
+  }, [messageIds, messagesById, type, isServiceNotificationsChat]);
 
   useInterval(() => {
-    if (!messageIds || !messagesById) {
+    if (!messageIds || !messagesById || type === 'scheduled') {
       return;
     }
     const ids = messageIds.filter((id) => messagesById[id]?.reactions);
@@ -299,7 +284,7 @@ const MessageList: FC<OwnProps & StateProps> = ({
   }, MESSAGE_REACTIONS_POLLING_INTERVAL);
 
   useInterval(() => {
-    if (!messageIds || !messagesById || threadId !== MAIN_THREAD_ID) {
+    if (!messageIds || !messagesById || threadId !== MAIN_THREAD_ID || type === 'scheduled') {
       return;
     }
     const ids = messageIds.filter((id) => messagesById[id]?.repliesThreadInfo?.isComments
@@ -321,7 +306,7 @@ const MessageList: FC<OwnProps & StateProps> = ({
 
   const { isScrolled, updateStickyDates } = useStickyDates();
 
-  const handleScroll = useCallback(() => {
+  const handleScroll = useLastCallback(() => {
     if (isScrollTopJustUpdatedRef.current) {
       isScrollTopJustUpdatedRef.current = false;
       return;
@@ -353,9 +338,7 @@ const MessageList: FC<OwnProps & StateProps> = ({
         setScrollOffset({ chatId, threadId, scrollOffset: scrollOffsetRef.current });
       }
     });
-  }, [
-    updateStickyDates, hasTools, getForceNextPinnedInHeader, onPinnedIntersectionChange, type, chatId, threadId,
-  ]);
+  });
 
   const [getContainerHeight, prevContainerHeightRef] = useContainerHeight(containerRef, canPost && !isSelectModeActive);
 
@@ -717,7 +700,7 @@ export default memo(withGlobal<OwnProps>(
       && !messageIds && !chat.unreadCount && !focusingId && lastMessage && !lastMessage.groupedId
     );
 
-    const chatBot = selectChatBot(global, chatId)!;
+    const chatBot = selectBot(global, chatId)!;
     let isLoadingBotInfo = false;
     let botInfo;
     if (selectIsChatBotNotStarted(global, chatId)) {
@@ -748,7 +731,6 @@ export default memo(withGlobal<OwnProps>(
       isComments: Boolean(threadInfo?.originChannelId),
       firstUnreadId: selectFirstUnreadId(global, chatId, threadId),
       isViewportNewest: type !== 'thread' || selectIsViewportNewest(global, chatId, threadId),
-      threadFirstMessageId: selectFirstMessageId(global, chatId, threadId),
       focusingId,
       isSelectModeActive: selectIsInSelectMode(global),
       isLoadingBotInfo,

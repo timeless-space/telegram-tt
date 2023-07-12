@@ -37,6 +37,14 @@ type OwnProps = {
   onClick?: (e: React.MouseEventHandler<HTMLInputElement>) => void;
 };
 
+/**
+ * TL - Custom InputText
+ * Description: Input text was changed, add some properties to trigger
+ *   - onLoading: Handle loading state. The Loading is on the right side of the input element.
+ *   - loadingSize: The size of the loading element.
+ *   - caretColor: The color of the caret.
+ */
+
 const InputText: FC<OwnProps> = ({
   ref,
   id,

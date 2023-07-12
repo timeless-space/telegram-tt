@@ -1,6 +1,6 @@
 import type { RefObject } from 'react';
 import React, {
-  memo, useCallback, useEffect, useState,
+  memo, useEffect, useState,
 } from '../../lib/teact/teact';
 import { getActions, withGlobal } from '../../global';
 
@@ -12,6 +12,8 @@ import type { FoldersActions } from '../../hooks/reducers/useFoldersReducer';
 import { IS_MAC_OS, IS_APP, LAYERS_ANIMATION_NAME } from '../../util/windowEnvironment';
 import captureEscKeyListener from '../../util/captureEscKeyListener';
 import { selectCurrentChat, selectIsForumPanelOpen, selectTabState } from '../../global/selectors';
+
+import useLastCallback from '../../hooks/useLastCallback';
 import useFoldersReducer from '../../hooks/reducers/useFoldersReducer';
 import { useHotkeys } from '../../hooks/useHotkeys';
 import useSyncEffect from '../../hooks/useSyncEffect';
@@ -148,7 +150,7 @@ function LeftColumn({
       break;
   }
 
-  const handleReset = useCallback((forceReturnToChatList?: true | Event) => {
+  const handleReset = useLastCallback((forceReturnToChatList?: true | Event) => {
     function fullReset() {
       setContent(LeftColumnContent.ChatList);
       setSettingsScreen(SettingsScreens.Main);
@@ -357,12 +359,9 @@ function LeftColumn({
     }
 
     fullReset();
-  }, [
-    content, isFirstChatFolderActive, setGlobalSearchClosing, resetChatCreation, setGlobalSearchQuery,
-    setGlobalSearchDate, setGlobalSearchChatId, settingsScreen, hasPasscode,
-  ]);
+  });
 
-  const handleSearchQuery = useCallback((query: string) => {
+  const handleSearchQuery = useLastCallback((query: string) => {
     if (content === LeftColumnContent.Contacts) {
       setContactsFilter(query);
       return;
@@ -373,44 +372,58 @@ function LeftColumn({
     if (query !== searchQuery) {
       setGlobalSearchQuery({ query });
     }
-  }, [content, searchQuery, setGlobalSearchQuery]);
+  });
 
-  const handleTopicSearch = useCallback(() => {
+  const handleTopicSearch = useLastCallback(() => {
     setContent(LeftColumnContent.GlobalSearch);
     setGlobalSearchQuery({ query: '' });
     setGlobalSearchChatId({ id: forumPanelChatId });
-  }, [forumPanelChatId, setGlobalSearchChatId, setGlobalSearchQuery]);
+  });
 
   useEffect(
-    () => (content !== LeftColumnContent.ChatList || (isFirstChatFolderActive && !isChatOpen && !isForumPanelOpen)
-      ? captureEscKeyListener(() => handleReset())
-      : undefined),
+    () => {
+      const isArchived = content === LeftColumnContent.Archived;
+      const isChatList = content === LeftColumnContent.ChatList;
+      const noChatOrForumOpen = !isChatOpen && !isForumPanelOpen;
+      // We listen for escape key only in these cases:
+      // 1. When we are in archived chats and no chat or forum is open.
+      // 2. When we are in any other screen except chat list and archived chat list.
+      // 3. When we are in chat list and first chat folder is active and no chat or forum is open.
+      if ((isArchived && noChatOrForumOpen) || (!isChatList && !isArchived)
+        || (isFirstChatFolderActive && noChatOrForumOpen)) {
+        return captureEscKeyListener(() => {
+          handleReset();
+        });
+      } else {
+        return undefined;
+      }
+    },
     [isFirstChatFolderActive, content, handleReset, isChatOpen, isForumPanelOpen],
   );
 
-  const handleHotkeySearch = useCallback((e: KeyboardEvent) => {
+  const handleHotkeySearch = useLastCallback((e: KeyboardEvent) => {
     if (content === LeftColumnContent.GlobalSearch) {
       return;
     }
 
     e.preventDefault();
     setContent(LeftColumnContent.GlobalSearch);
-  }, [content]);
+  });
 
-  const handleHotkeySavedMessages = useCallback((e: KeyboardEvent) => {
+  const handleHotkeySavedMessages = useLastCallback((e: KeyboardEvent) => {
     e.preventDefault();
     openChat({ id: currentUserId, shouldReplaceHistory: true });
-  }, [currentUserId, openChat]);
+  });
 
-  const handleArchivedChats = useCallback((e: KeyboardEvent) => {
+  const handleArchivedChats = useLastCallback((e: KeyboardEvent) => {
     e.preventDefault();
     setContent(LeftColumnContent.Archived);
-  }, []);
+  });
 
-  const handleHotkeySettings = useCallback((e: KeyboardEvent) => {
+  const handleHotkeySettings = useLastCallback((e: KeyboardEvent) => {
     e.preventDefault();
     setContent(LeftColumnContent.Settings);
-  }, []);
+  });
 
   useHotkeys({
     'Mod+Shift+F': handleHotkeySearch,
@@ -442,10 +455,10 @@ function LeftColumn({
     }
   }, [foldersDispatch, nextFoldersAction, nextSettingsScreen, requestNextSettingsScreen]);
 
-  const handleSettingsScreenSelect = useCallback((screen: SettingsScreens) => {
+  const handleSettingsScreenSelect = useLastCallback((screen: SettingsScreens) => {
     setContent(LeftColumnContent.Settings);
     setSettingsScreen(screen);
-  }, []);
+  });
 
   function renderContent(isActive: boolean) {
     switch (contentType) {

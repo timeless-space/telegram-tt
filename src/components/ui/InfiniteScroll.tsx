@@ -1,6 +1,6 @@
 import type { RefObject, UIEvent } from 'react';
 import React, {
-  useCallback, useEffect, useLayoutEffect, useMemo, useRef,
+  useEffect, useLayoutEffect, useMemo, useRef,
 } from '../../lib/teact/teact';
 import { requestForcedReflow } from '../../lib/fasterdom/fasterdom';
 
@@ -11,9 +11,11 @@ import { debounce } from '../../util/schedulers';
 import resetScroll from '../../util/resetScroll';
 import { IS_ANDROID } from '../../util/windowEnvironment';
 import buildStyle from '../../util/buildStyle';
+import useLastCallback from '../../hooks/useLastCallback';
 
 type OwnProps = {
   ref?: RefObject<HTMLDivElement>;
+  style?: string;
   className?: string;
   items?: any[];
   itemSelector?: string;
@@ -40,6 +42,7 @@ const DEFAULT_SENSITIVE_AREA = 800;
 
 const InfiniteScroll: FC<OwnProps> = ({
   ref,
+  style,
   className,
   items,
   itemSelector = DEFAULT_LIST_SELECTOR,
@@ -146,7 +149,7 @@ const InfiniteScroll: FC<OwnProps> = ({
     });
   }, [items, itemSelector, noScrollRestore, noScrollRestoreOnTop, cacheBuster, withAbsolutePositioning]);
 
-  const handleScroll = useCallback((e: UIEvent<HTMLDivElement>) => {
+  const handleScroll = useLastCallback((e: UIEvent<HTMLDivElement>) => {
     if (loadMoreForwards && loadMoreBackwards) {
       const {
         isScrollTopJustUpdated, currentAnchor, currentAnchorTop,
@@ -226,7 +229,7 @@ const InfiniteScroll: FC<OwnProps> = ({
     if (onScroll) {
       onScroll(e);
     }
-  }, [loadMoreBackwards, loadMoreForwards, onScroll, sensitiveArea]);
+  });
 
   return (
     <div
@@ -237,12 +240,16 @@ const InfiniteScroll: FC<OwnProps> = ({
       onKeyDown={onKeyDown}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
+      style={style}
     >
       {beforeChildren}
       {withAbsolutePositioning && items?.length ? (
         <div
           teactFastList={!noFastList}
-          style={buildStyle('position: relative', IS_ANDROID && `height: ${maxHeight}px`)}
+          /**
+           * TL - Custom infinite scroll, set auto scroll although is not enough items.
+           */
+          style={buildStyle('position: relative', IS_ANDROID && `height: ${maxHeight}px`, 'min-height: 720px')}
         >
           {children}
         </div>

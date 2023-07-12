@@ -1,6 +1,6 @@
 import type { FC } from '../../lib/teact/teact';
 import React, {
-  useCallback, memo, useMemo, useEffect, useState, useRef,
+  memo, useMemo, useEffect, useState, useRef,
 } from '../../lib/teact/teact';
 import { getActions, getGlobal, withGlobal } from '../../global';
 
@@ -32,6 +32,7 @@ import FullNameTitle from '../common/FullNameTitle';
 import PrivateChatInfo from '../common/PrivateChatInfo';
 
 import './ReactorListModal.scss';
+import useLastCallback from '../../hooks/useLastCallback';
 
 const MIN_REACTIONS_COUNT_FOR_FILTERS = 10;
 
@@ -81,28 +82,28 @@ const ReactorListModal: FC<OwnProps & StateProps> = ({
     }
   }, [isClosing, isOpen, stopClosing]);
 
-  const handleCloseAnimationEnd = useCallback(() => {
+  const handleCloseAnimationEnd = useLastCallback(() => {
     if (chatIdRef.current) {
       openChat({ id: chatIdRef.current });
     }
     closeReactorListModal();
-  }, [closeReactorListModal, openChat]);
+  });
 
-  const handleClose = useCallback(() => {
+  const handleClose = useLastCallback(() => {
     startClosing();
-  }, [startClosing]);
+  });
 
-  const handleClick = useCallback((userId: string) => {
+  const handleClick = useLastCallback((userId: string) => {
     chatIdRef.current = userId;
     handleClose();
-  }, [handleClose]);
+  });
 
-  const handleLoadMore = useCallback(() => {
+  const handleLoadMore = useLastCallback(() => {
     loadReactors({
       chatId: chatId!,
       messageId: messageId!,
     });
-  }, [chatId, loadReactors, messageId]);
+  });
 
   const allReactions = useMemo(() => {
     const uniqueReactions: ApiReaction[] = [];
@@ -202,7 +203,7 @@ const ReactorListModal: FC<OwnProps & StateProps> = ({
                       // eslint-disable-next-line react/jsx-no-bind
                       onClick={() => handleClick(userId)}
                     >
-                      <Avatar user={user} size="small" />
+                      <Avatar user={user} size="medium" />
                       <div className="info">
                         <FullNameTitle peer={user} withEmojiStatus />
                         <span className="status" dir="auto">
@@ -232,6 +233,7 @@ const ReactorListModal: FC<OwnProps & StateProps> = ({
                       <PrivateChatInfo
                         userId={userId}
                         noStatusOrTyping
+                        avatarSize="medium"
                         status={seenByUser ? formatDateAtTime(lang, seenByUser * 1000) : undefined}
                         statusIcon="icon-message-read"
                       />

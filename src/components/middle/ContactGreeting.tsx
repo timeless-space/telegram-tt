@@ -1,15 +1,16 @@
 import type { FC } from '../../lib/teact/teact';
-import React, {
-  memo, useCallback, useEffect, useRef,
-} from '../../lib/teact/teact';
+import React, { memo, useEffect, useRef } from '../../lib/teact/teact';
 import { getActions, withGlobal } from '../../global';
 
 import type { ApiSticker, ApiUpdateConnectionStateType } from '../../api/types';
+import type { MessageList } from '../../global/types';
 
-import { selectChat } from '../../global/selectors';
-import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
-import useLang from '../../hooks/useLang';
+import { selectChat, selectCurrentMessageList } from '../../global/selectors';
 import { getUserIdDividend } from '../../global/helpers';
+
+import useLastCallback from '../../hooks/useLastCallback';
+import useLang from '../../hooks/useLang';
+import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
 
 import StickerButton from '../common/StickerButton';
 
@@ -23,6 +24,7 @@ type StateProps = {
   sticker?: ApiSticker;
   lastUnreadMessageId?: number;
   connectionState?: ApiUpdateConnectionStateType;
+  currentMessageList?: MessageList;
 };
 
 const INTERSECTION_DEBOUNCE_MS = 200;
@@ -31,6 +33,7 @@ const ContactGreeting: FC<OwnProps & StateProps> = ({
   sticker,
   connectionState,
   lastUnreadMessageId,
+  currentMessageList,
 }) => {
   const {
     loadGreetingStickers,
@@ -61,13 +64,17 @@ const ContactGreeting: FC<OwnProps & StateProps> = ({
     }
   }, [connectionState, markMessageListRead, lastUnreadMessageId]);
 
-  const handleStickerSelect = useCallback((selectedSticker: ApiSticker) => {
+  const handleStickerSelect = useLastCallback((selectedSticker: ApiSticker) => {
+    if (!currentMessageList) {
+      return;
+    }
+
     selectedSticker = {
       ...selectedSticker,
       isPreloadedGlobally: true,
     };
-    sendMessage({ sticker: selectedSticker });
-  }, [sendMessage]);
+    sendMessage({ sticker: selectedSticker, messageList: currentMessageList });
+  });
 
   return (
     <div className="ContactGreeting" ref={containerRef}>
@@ -110,6 +117,7 @@ export default memo(withGlobal<OwnProps>(
         ? chat.lastMessage.id
         : undefined,
       connectionState: global.connectionState,
+      currentMessageList: selectCurrentMessageList(global),
     };
   },
 )(ContactGreeting));

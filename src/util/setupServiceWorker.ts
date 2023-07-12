@@ -69,6 +69,9 @@ if (IS_SERVICE_WORKER_SUPPORTED) {
 
       await navigator.serviceWorker.ready;
 
+      // Wait for registration to be available
+      await navigator.serviceWorker.getRegistration();
+
       if (navigator.serviceWorker.controller) {
         if (DEBUG) {
           // eslint-disable-next-line no-console

@@ -1,6 +1,6 @@
 import type { FC } from '../../lib/teact/teact';
 import React, {
-  useEffect, memo, useCallback, useState, useRef, useLayoutEffect,
+  useEffect, memo, useState, useRef, useLayoutEffect,
 } from '../../lib/teact/teact';
 import { addExtraClass } from '../../lib/teact/teact-dom';
 import { requestNextMutation } from '../../lib/fasterdom/fasterdom';
@@ -44,6 +44,7 @@ import { parseInitialLocationHash, parseLocationHash } from '../../util/routing'
 import { Bundles, loadBundle } from '../../util/moduleLoader';
 import updateIcon from '../../util/updateIcon';
 
+import useLastCallback from '../../hooks/useLastCallback';
 import useEffectWithPrevDeps from '../../hooks/useEffectWithPrevDeps';
 import useBackgroundMode from '../../hooks/useBackgroundMode';
 import useBeforeUnload from '../../hooks/useBeforeUnload';
@@ -461,12 +462,12 @@ const Main: FC<OwnProps & StateProps> = ({
   const isFullscreen = useFullscreenStatus();
 
   // Handle opening right column
-  useSyncEffect(([prevIsRightColumnOpen]) => {
+  useSyncEffect(([prevIsMiddleColumnOpen, prevIsRightColumnOpen]) => {
     if (prevIsRightColumnOpen === undefined || isRightColumnOpen === prevIsRightColumnOpen) {
       return;
     }
 
-    if (noRightColumnAnimation) {
+    if (!prevIsMiddleColumnOpen || noRightColumnAnimation) {
       setIsNarrowMessageList(isRightColumnOpen);
       return;
     }
@@ -481,7 +482,7 @@ const Main: FC<OwnProps & StateProps> = ({
       forceUpdate();
       setIsNarrowMessageList(isRightColumnOpen);
     });
-  }, [isRightColumnOpen, noRightColumnAnimation, forceUpdate]);
+  }, [isMiddleColumnOpen, isRightColumnOpen, noRightColumnAnimation, forceUpdate]);
 
   const className = buildClassName(
     leftColumnTransition.hasShownClass && 'left-column-shown',
@@ -495,11 +496,11 @@ const Main: FC<OwnProps & StateProps> = ({
     isFullscreen && 'is-fullscreen',
   );
 
-  const handleBlur = useCallback(() => {
+  const handleBlur = useLastCallback(() => {
     onTabFocusChange({ isBlurred: true });
-  }, [onTabFocusChange]);
+  });
 
-  const handleFocus = useCallback(() => {
+  const handleFocus = useLastCallback(() => {
     onTabFocusChange({ isBlurred: false });
 
     if (!document.title.includes(INACTIVE_MARKER)) {
@@ -507,15 +508,15 @@ const Main: FC<OwnProps & StateProps> = ({
     }
 
     updateIcon(false);
-  }, [onTabFocusChange, updatePageTitle]);
+  });
 
-  const handleStickerSetModalClose = useCallback(() => {
+  const handleStickerSetModalClose = useLastCallback(() => {
     closeStickerSetModal();
-  }, [closeStickerSetModal]);
+  });
 
-  const handleCustomEmojiSetsModalClose = useCallback(() => {
+  const handleCustomEmojiSetsModalClose = useLastCallback(() => {
     closeCustomEmojiSets();
-  }, [closeCustomEmojiSets]);
+  });
 
   // Online status and browser tab indicators
   useBackgroundMode(handleBlur, handleFocus);
