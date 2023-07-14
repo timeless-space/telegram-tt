@@ -2512,6 +2512,13 @@ export type TabArgs<T> = T extends RequiredGlobalState ? [
 ];
 
 /**
+ * TL - Custom message interface for createGroupGlobal function
+ */
+export interface Group {
+  title: string;
+}
+
+/**
  * TL - Custom message interface for sendMessageGlobal function
  */
 export interface Message {
