@@ -564,9 +564,9 @@ export type TabState = {
   requestedTranslations: {
     byChatId: Record<string, ChatRequestedTranslations>;
   };
-  messageLanguageModal?: {
+  chatLanguageModal?: {
     chatId: string;
-    messageId: number;
+    messageId?: number;
     activeLanguage?: string;
   };
 
@@ -589,7 +589,8 @@ export type GlobalState = {
   currentUserId?: string;
   isSyncing?: boolean;
   isUpdateAvailable?: boolean;
-  lastSyncTime?: number;
+  isSynced?: boolean;
+  isFetchingDifference?: boolean;
   leftColumnWidth?: number;
   lastIsChatInfoShown?: boolean;
   initialUnreadNotifications?: number;
@@ -1445,11 +1446,11 @@ export interface ActionPayloads {
   disableContextMenuHint: undefined;
   focusNextReply: WithTabId | undefined;
 
-  openMessageLanguageModal: {
+  openChatLanguageModal: {
     chatId: string;
-    id: number;
+    messageId?: number;
   } & WithTabId;
-  closeMessageLanguageModal: WithTabId | undefined;
+  closeChatLanguageModal: WithTabId | undefined;
 
   // poll result
   openPollResults: {
@@ -1526,13 +1527,15 @@ export interface ActionPayloads {
   hideChatReportPanel: {
     chatId: string;
   };
-  toggleManagement: WithTabId | undefined;
+  toggleManagement: ({
+    force?: boolean;
+  } & WithTabId) | undefined;
   requestNextManagementScreen: ({
     screen?: ManagementScreens;
   } & WithTabId) | undefined;
   closeManagement: WithTabId | undefined;
   checkPublicLink: { username: string } & WithTabId;
-  updatePublicLink: { username: string } & WithTabId;
+  updatePublicLink: { username: string; shouldDisableUsernames?: boolean } & WithTabId;
   updatePrivateLink: WithTabId | undefined;
   resetManagementError: { chatId: string } & WithTabId;
 
@@ -1590,6 +1593,9 @@ export interface ActionPayloads {
 
   // Initial
   signOut: { forceInitApi?: boolean } | undefined;
+  requestChannelDifference: {
+    chatId: string;
+  };
 
   // Misc
   setInstallPrompt: { canInstall: boolean } & WithTabId;
@@ -1638,6 +1644,10 @@ export interface ActionPayloads {
     about: string;
     photo?: File;
   } & WithTabId;
+  updateChatDetectedLanguage: {
+    chatId: string;
+    detectedLanguage?: string;
+  };
   toggleSignatures: {
     chatId: string;
     isEnabled: boolean;
@@ -1732,6 +1742,16 @@ export interface ActionPayloads {
     url: string;
   } & WithTabId;
 
+  requestChatTranslation: {
+    chatId: string;
+    toLanguageCode?: string;
+  } & WithTabId;
+
+  togglePeerTranslations: {
+    chatId: string;
+    isEnabled: boolean;
+  };
+
   // Messages
   setEditingDraft: {
     text?: ApiFormattedText;
@@ -1797,6 +1817,11 @@ export interface ActionPayloads {
     id: number;
   } & WithTabId;
 
+  markMessagesTranslationPending: {
+    chatId: string;
+    messageIds: number[];
+    toLanguageCode?: string;
+  };
   translateMessages: {
     chatId: string;
     messageIds: number[];
@@ -2300,6 +2325,7 @@ export interface ActionPayloads {
     shouldDiscard?: boolean;
     shouldRemove?: boolean;
     rejoin?: ActionPayloads['joinGroupCall'];
+    isPageUnload?: boolean;
   } & WithTabId) | undefined;
 
   toggleGroupCallVideo: undefined;
@@ -2333,7 +2359,7 @@ export interface ActionPayloads {
     isVideo?: boolean;
   } & WithTabId;
   sendSignalingData: P2pMessage;
-  hangUp: WithTabId | undefined;
+  hangUp: ({ isPageUnload?: boolean } & WithTabId) | undefined;
   acceptCall: undefined;
   setCallRating: {
     rating: number;
@@ -2359,6 +2385,8 @@ export interface ActionPayloads {
   skipLockOnUnload: undefined;
 
   // Settings
+  updateShouldDebugExportedSenders: undefined;
+  updateShouldEnableDebugLog: undefined;
   loadConfig: undefined;
   loadAppConfig: {
     hash: number;

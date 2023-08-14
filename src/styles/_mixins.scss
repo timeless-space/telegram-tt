@@ -5,6 +5,10 @@
   }
 }
 
+@mixin adapt-padding-to-scrollbar($padding) {
+  padding-inline-end: calc($padding - var(--scrollbar-width));
+}
+
 @mixin overflow-y-overlay() {
   @supports (overflow-y: overlay) {
     overflow-y: overlay;
@@ -13,6 +17,11 @@
     overflow-x: hidden;
   }
 }
+
+@mixin adapt-margin-to-scrollbar($margin) {
+  margin-inline-end: calc($margin - var(--scrollbar-width));
+}
+
 
 @mixin reset-range() {
   input[type="range"] {
